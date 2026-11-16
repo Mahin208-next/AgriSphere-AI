@@ -318,3 +318,4 @@ export default function ProcurementCard({ request, onRefresh }: ProcurementCardP
     </div>
   );
 }
+

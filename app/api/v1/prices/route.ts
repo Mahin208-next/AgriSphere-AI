@@ -36,3 +36,4 @@ export async function GET(req: Request) {
     markets: BANGLADESH_MARKETS,
   });
 }
+

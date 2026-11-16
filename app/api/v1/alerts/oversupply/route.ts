@@ -6,3 +6,4 @@ export async function GET() {
   const alerts = Array.from(db.oversupplyAlerts.values());
   return NextResponse.json({ alerts });
 }
+

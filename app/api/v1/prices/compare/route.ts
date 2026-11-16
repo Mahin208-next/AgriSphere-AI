@@ -24,3 +24,4 @@ export async function GET(req: Request) {
     priceSpreadBdt: todayPrices.length > 1 ? todayPrices[0].wholesalePrice - todayPrices[todayPrices.length - 1].wholesalePrice : 0,
   });
 }
+

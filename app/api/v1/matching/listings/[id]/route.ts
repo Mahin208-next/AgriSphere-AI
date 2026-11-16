@@ -16,3 +16,4 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     algorithm: "Match Score = 0.35 * Quantity + 0.30 * Location + 0.20 * Price + 0.15 * Timing",
   });
 }
+

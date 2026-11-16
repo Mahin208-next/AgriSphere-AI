@@ -1,0 +1,360 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  nameBn       String?
+  email        String   @unique
+  phone        String   @unique
+  role         String   // farmer, buyer, factory, retailer, exporter, importer, admin
+  district     String
+  upazila      String?
+  verified     Boolean  @default(false)
+  avatarUrl    String?
+  companyName  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  farmerProfile   FarmerProfile?
+  businessProfile BusinessProfile?
+  listings        ProductListing[]
+  auctions        Auction[]
+  bids            Bid[]
+  procurements    ProcurementRequest[]
+  supplierOffers  SupplierOffer[]
+  exportRfqs      ExportRfq[]
+  exportQuotes    ExportQuotation[]
+  ordersAsSeller  Order[]          @relation("OrderSeller")
+  ordersAsBuyer   Order[]          @relation("OrderBuyer")
+  auditLogs       AuditLog[]
+}
+
+model FarmerProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farmName     String
+  totalAcreage Float
+  primaryCrops String
+  nidVerified  Boolean  @default(false)
+  division     String
+  district     String
+  upazila      String
+  village      String?
+}
+
+model BusinessProfile {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName          String
+  businessType         String   // mill, wholesaler, exporter, retailer, importer
+  tradeLicenseNumber   String?
+  taxId                String?
+  country              String   @default("Bangladesh")
+  district             String
+  procurementCapacity  Float?
+  verified             Boolean  @default(false)
+}
+
+model Crop {
+  id                String   @id
+  nameEn            String
+  nameBn            String
+  category          String   // vegetable, spice, grain, fruit, cash_crop
+  defaultUnit       String   @default("kg")
+  image             String
+  supportedGrades   String
+  damReferenceCode  String?
+}
+
+model District {
+  id        String @id
+  nameEn    String
+  nameBn    String
+  division  String
+  lat       Float
+  lng       Float
+}
+
+model Market {
+  id         String @id
+  nameEn     String
+  nameBn     String
+  district   String
+  division   String
+  marketType String // wholesale, retail, assembly, terminal
+  lat        Float
+  lng        Float
+}
+
+model MarketPrice {
+  id                 String   @id @default(uuid())
+  cropId             String
+  cropNameEn         String
+  cropNameBn         String
+  marketId           String
+  marketNameEn       String
+  marketNameBn       String
+  district           String
+  wholesalePrice     Float
+  retailPrice        Float
+  minPrice           Float
+  maxPrice           Float
+  priceUnit          String   @default("BDT/kg")
+  date               String
+  priceSource        String   // DAM, AgriPriceBD, Platform, Manual, Demo
+  verificationStatus String   @default("verified")
+  dataFreshnessDays  Int      @default(0)
+  isDemo             Boolean  @default(false)
+  createdAt          DateTime @default(now())
+}
+
+model ProductListing {
+  id                  String   @id @default(uuid())
+  farmerId            String
+  farmer              User     @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  farmerName          String
+  farmerPhone         String
+  cropId              String
+  cropNameEn          String
+  cropNameBn          String
+  variety             String?
+  quantity            Float
+  unit                String   @default("kg")
+  grade               String   @default("Grade A")
+  district            String
+  upazila             String
+  startingPrice       Float
+  expectedPrice       Float
+  privateReservePrice Float    // Protected
+  isAuction           Boolean  @default(false)
+  auctionId           String?
+  status              String   @default("active") // active, in_auction, sold, cancelled
+  images              String
+  harvestDate         String
+  description         String?
+  isDemo              Boolean  @default(false)
+  createdAt           DateTime @default(now())
+
+  auction             Auction?
+}
+
+model Auction {
+  id                     String         @id @default(uuid())
+  listingId              String         @unique
+  listing                ProductListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  farmerId               String
+  farmer                 User           @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  farmerName             String
+  cropNameEn             String
+  cropNameBn             String
+  quantity               Float
+  unit                   String         @default("kg")
+  grade                  String
+  district               String
+  startingPrice          Float
+  minIncrement           Float          @default(1.0)
+  reservePrice           Float          // Protected
+  currentHighestBid      Float          @default(0)
+  currentHighestBidderId String?
+  currentHighestBidderName String?
+  status                 String         @default("live") // pending, live, closed, accepted, rejected
+  startTime              DateTime       @default(now())
+  endTime                DateTime
+  antiSnipeWindowSeconds Int            @default(120)
+  autoExtendTimeSeconds  Int            @default(120)
+  totalBids              Int            @default(0)
+  acceptedBidId          String?
+  isDemo                 Boolean        @default(false)
+  createdAt              DateTime       @default(now())
+
+  bids                   Bid[]
+}
+
+model Bid {
+  id            String   @id @default(uuid())
+  auctionId     String
+  auction       Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  bidderId      String
+  bidder        User     @relation(fields: [bidderId], references: [id], onDelete: Cascade)
+  bidderName    String
+  bidderRole    String
+  bidderCompany String?
+  amount        Float
+  timestamp     DateTime @default(now())
+  isAnonymous   Boolean  @default(false)
+  status        String   @default("active") // active, outbid, accepted, rejected
+}
+
+model ProcurementRequest {
+  id                    String          @id @default(uuid())
+  buyerId               String
+  buyer                 User            @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  buyerName             String
+  buyerRole             String
+  companyName           String
+  cropId                String
+  cropNameEn            String
+  cropNameBn            String
+  requiredQuantity      Float
+  unit                  String          @default("kg")
+  qualityGrade          String
+  maxBudgetPerUnit      Float           @default(0)
+  isBudgetPrivate       Boolean         @default(false)
+  deliveryLocation      String
+  deliveryDistrict      String
+  requiredDeliveryDate  String
+  allowSplitFulfillment Boolean         @default(true)
+  fulfilledQuantity     Float           @default(0)
+  status                String          @default("open") // open, partially_fulfilled, fulfilled, closed
+  notes                 String?
+  isDemo                Boolean         @default(false)
+  createdAt             DateTime        @default(now())
+
+  offers                SupplierOffer[]
+}
+
+model SupplierOffer {
+  id                    String             @id @default(uuid())
+  requestId             String
+  request               ProcurementRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  farmerId              String
+  farmer                User               @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  farmerName            String
+  farmerPhone           String
+  farmerDistrict        String
+  offeredQuantity       Float
+  unit                  String             @default("kg")
+  pricePerUnit          Float
+  qualityGrade          String
+  estimatedDeliveryDate String
+  notes                 String?
+  status                String             @default("pending") // pending, accepted, rejected
+  isDemo                Boolean            @default(false)
+  createdAt             DateTime           @default(now())
+}
+
+model DirectContract {
+  id               String   @id @default(uuid())
+  initiatorId      String
+  initiatorName    String
+  initiatorRole    String
+  recipientId      String
+  recipientName    String
+  cropNameEn       String
+  cropNameBn       String
+  quantity         Float
+  unit             String   @default("kg")
+  agreedPrice      Float
+  priceType        String   @default("fixed") // fixed, negotiable
+  paymentTerms     String
+  deliverySchedule String
+  deliveryLocation String
+  expirationDate   String
+  status           String   @default("proposed") // draft, proposed, accepted, rejected, negotiating
+  notes            String?
+  isDemo           Boolean  @default(false)
+  createdAt        DateTime @default(now())
+}
+
+model Order {
+  id               String   @id @default(uuid())
+  referenceType    String   // auction, procurement, direct_contract
+  referenceId      String
+  sellerId         String
+  seller           User     @relation("OrderSeller", fields: [sellerId], references: [id])
+  sellerName       String
+  sellerPhone      String?
+  buyerId          String
+  buyer            User     @relation("OrderBuyer", fields: [buyerId], references: [id])
+  buyerName        String
+  buyerPhone       String?
+  cropNameEn       String
+  cropNameBn       String
+  quantity         Float
+  unit             String   @default("kg")
+  pricePerUnit     Float
+  totalAmount      Float
+  deliveryDistrict String
+  status           String   @default("confirmed") // confirmed, in_transit, delivered, completed, cancelled
+  createdAt        DateTime @default(now())
+}
+
+model ExportRfq {
+  id                     String            @id @default(uuid())
+  importerId             String
+  importer               User              @relation(fields: [importerId], references: [id], onDelete: Cascade)
+  importerName           String
+  companyName            String
+  country                String
+  cropNameEn             String
+  cropNameBn             String
+  targetQuantityTonnes   Float
+  requiredGrade          String
+  packagingType          String
+  destinationPort        String
+  targetDeliveryMonth    String
+  certificationsRequired String
+  maxTargetFobPriceUsd   Float?
+  status                 String            @default("open") // open, quoted, closed
+  notes                  String?
+  isDemo                 Boolean           @default(false)
+  createdAt              DateTime          @default(now())
+
+  quotations             ExportQuotation[]
+}
+
+model ExportQuotation {
+  id                     String    @id @default(uuid())
+  rfqId                  String
+  rfq                    ExportRfq @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  exporterId             String
+  exporter               User      @relation(fields: [exporterId], references: [id], onDelete: Cascade)
+  exporterName           String
+  companyName            String
+  fobPriceUsd            Float
+  leadTimeDays           Int
+  packagingOffered       String
+  certificationsProvided String
+  status                 String    @default("submitted") // submitted, under_review, accepted, rejected
+  notes                  String?
+  createdAt              DateTime  @default(now())
+}
+
+model OversupplyAlert {
+  id                  String   @id @default(uuid())
+  district            String
+  districtBn          String
+  cropNameEn          String
+  cropNameBn          String
+  listedSupplyTonnes  Float
+  buyerDemandTonnes   Float
+  surplusTonnes       Float
+  imbalanceRatio      Float
+  riskLevel           String   // low, moderate, high
+  suggestedActionsEn  String
+  suggestedActionsBn  String
+  updatedAt           DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userName   String?
+  action     String
+  entityType String
+  entityId   String?
+  details    String
+  timestamp  DateTime @default(now())
+  ipAddress  String?
+}
+

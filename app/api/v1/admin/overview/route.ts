@@ -38,3 +38,4 @@ export async function GET() {
     oversupplyAlerts: Array.from(db.oversupplyAlerts.values()),
   });
 }
+

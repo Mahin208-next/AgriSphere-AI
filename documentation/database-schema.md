@@ -145,3 +145,4 @@ The platform uses a fully relational structure with strict foreign-key semantics
 - `entityId` (VARCHAR, NULLABLE)
 - `details` (TEXT)
 - `timestamp` (TIMESTAMP)
+

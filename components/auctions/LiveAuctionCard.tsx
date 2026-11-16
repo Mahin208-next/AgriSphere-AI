@@ -403,3 +403,4 @@ export default function LiveAuctionCard({ auction, onRefresh }: LiveAuctionCardP
     </div>
   );
 }
+

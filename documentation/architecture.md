@@ -72,3 +72,4 @@ $$\text{Match Score} = 0.35 \times Q_{\text{comp}} + 0.30 \times L_{\text{comp}}
 ### 4. Grounded Bangla AI Assistant
 - Bilingual conversational assistant supporting Bangla, English, and Banglish.
 - RAG architecture citing actual data freshness dates without price hallucinations.
+

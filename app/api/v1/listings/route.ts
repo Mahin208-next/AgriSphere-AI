@@ -125,3 +125,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err.message || "Failed to create listing" }, { status: 500 });
   }
 }
+
