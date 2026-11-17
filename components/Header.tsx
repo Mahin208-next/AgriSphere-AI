@@ -34,7 +34,6 @@ export default function Header() {
     { href: "/procurement", label: t.nav.procurement, icon: Building2 },
     { href: "/export", label: t.nav.export, icon: Globe2 },
     { href: "/assistant", label: t.nav.assistant, icon: Bot },
-    { href: "/dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
   ];
 
   return (
@@ -211,6 +210,18 @@ export default function Header() {
               </Link>
             );
           })}
+          <Link
+            href="/dashboard"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium ${
+              pathname === "/dashboard" ? "bg-agri-100 text-agri-900 font-semibold" : "text-earth-700 hover:bg-earth-50"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <LayoutDashboard className="w-4 h-4 text-agri-700" />
+              <span>{t.nav.dashboard}</span>
+            </div>
+          </Link>
         </div>
       )}
     </header>
