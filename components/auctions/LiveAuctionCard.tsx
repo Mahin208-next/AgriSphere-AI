@@ -14,7 +14,10 @@ import {
   Building2,
   Sparkles,
   ChevronRight,
-  ArrowUpRight
+  ArrowUpRight,
+  Camera,
+  Video as VideoIcon,
+  Radio
 } from "lucide-react";
 
 interface LiveAuctionCardProps {
@@ -194,6 +197,48 @@ export default function LiveAuctionCard({ auction, onRefresh }: LiveAuctionCardP
       </div>
 
       <div className="p-5">
+        {/* Media Showcase: Live Stream / Video / Uploaded Photo */}
+        {auction.isLiveStream ? (
+          <div className="mb-4 rounded-xl overflow-hidden border border-red-500 bg-black aspect-video max-h-48 relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/70 flex flex-col justify-between p-3 z-10 pointer-events-none">
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-red-600 text-white flex items-center gap-1 shadow animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                  🔴 {language === "bn" ? "কৃষক সরাসরি লাইভে" : "Farmer Live Broadcast"}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 text-white backdrop-blur-xs flex items-center gap-1">
+                  <Radio className="w-3 h-3 text-red-400 animate-pulse" />
+                  <span>{language === "bn" ? "ফিল্ড স্ট্রিমিং" : "Field Stream"}</span>
+                </span>
+              </div>
+              <div className="text-[11px] text-white/90 font-medium truncate">
+                🌾 {auction.farmerName} • {auction.district}
+              </div>
+            </div>
+            <img
+              src={auction.images?.[0] || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80"}
+              alt="Live stream preview"
+              className="w-full h-full object-cover filter brightness-90 animate-pulse duration-1000"
+            />
+          </div>
+        ) : auction.videoUrl ? (
+          <div className="mb-4 rounded-xl overflow-hidden border border-earth-300 bg-black aspect-video max-h-48 relative">
+            <video src={auction.videoUrl} controls className="w-full h-full object-cover" />
+          </div>
+        ) : auction.images && auction.images.length > 0 ? (
+          <div className="mb-4 rounded-xl overflow-hidden border border-earth-200 bg-earth-100 aspect-video max-h-40 relative group">
+            <img
+              src={auction.images[0]}
+              alt={auction.cropNameEn}
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+            <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 text-white text-[10px] font-medium backdrop-blur-xs flex items-center gap-1">
+              <Camera className="w-3 h-3 text-harvest-400" />
+              <span>{language === "bn" ? "কৃষকের আপলোডকৃত ছবি" : "Verified Photo"}</span>
+            </span>
+          </div>
+        ) : null}
+
         {/* Title & Specs */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div>

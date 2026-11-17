@@ -17,6 +17,8 @@ import {
   FileText
 } from "lucide-react";
 import LiveAuctionCard from "../auctions/LiveAuctionCard";
+import FarmerAuctionCreatorModal from "../auctions/FarmerAuctionCreatorModal";
+import { Camera, Video, Radio } from "lucide-react";
 
 export default function FarmerDashboard() {
   const { currentUser, language, t } = useApp();
@@ -27,18 +29,6 @@ export default function FarmerDashboard() {
   const [alerts, setAlerts] = useState<OversupplyAlert[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // Listing Form states
-  const [cropId, setCropId] = useState("green_chilli");
-  const [variety, setVariety] = useState("Bindu Hot Pepper");
-  const [quantity, setQuantity] = useState(1500);
-  const [startingPrice, setStartingPrice] = useState(130);
-  const [expectedPrice, setExpectedPrice] = useState(150);
-  const [reservePrice, setReservePrice] = useState(138);
-  const [isAuction, setIsAuction] = useState(true);
-  const [durationMinutes, setDurationMinutes] = useState(30);
-  const [minIncrement, setMinIncrement] = useState(2);
-  const [submitting, setSubmitting] = useState(false);
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -82,36 +72,7 @@ export default function FarmerDashboard() {
     fetchDashboardData();
   }, []);
 
-  const handleCreateListing = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/v1/listings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cropId,
-          variety,
-          quantity,
-          startingPrice,
-          expectedPrice,
-          privateReservePrice: reservePrice,
-          isAuction,
-          auctionDurationMinutes: durationMinutes,
-          minIncrement,
-        }),
-      });
 
-      if (res.ok) {
-        setShowCreateModal(false);
-        fetchDashboardData();
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const myAuctions = auctions.filter((a) => a.farmerId === currentUser?.id);
   const myAlert = alerts.find((a) => a.district.toLowerCase() === (currentUser?.district || "bogura").toLowerCase());
@@ -141,6 +102,44 @@ export default function FarmerDashboard() {
           <PlusCircle className="w-4 h-4" />
           <span>{language === "bn" ? "+ নতুন ফসল তালিকা বা লাইভ নিলাম শুরু" : "+ Add Crop / Start Live Auction"}</span>
         </button>
+      </div>
+
+      {/* Direct Produce Auction Launch Panel (Photo / Video / Live Stream) */}
+      <div className="bg-white rounded-3xl border-2 border-agri-600/30 p-5 sm:p-6 shadow-sm relative overflow-hidden bg-gradient-to-br from-white via-agri-50/20 to-harvest-50/30">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1.5 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-red-100 text-red-700 border border-red-200">
+              <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+              {language === "bn" ? "কৃষকের নিজস্ব নিলাম কেন্দ্র (System A)" : "Farmer Direct Auction Center (System A)"}
+            </div>
+            <h2 className="text-lg sm:text-xl font-black text-earth-900">
+              {language === "bn" ? "নিজের ফসল ছবি, ভিডিও বা সরাসরি লাইভে এসে নিলামে তুলুন" : "Sell Your Produce via Live Auction with Photos, Video & Live Stream"}
+            </h2>
+            <p className="text-xs text-earth-600 leading-relaxed">
+              {language === "bn"
+                ? "মধ্যস্বত্বভোগীদের কাছে পানির দরে বিক্রি না করে সরাসরি ঢাকাসহ সারা দেশের পাইকার, মিল ও সুপারশপের কাছে লাইভ নিলামে ডাক তুলুন। আপনি ছবি ও ভিডিও আপলোড করতে পারেন অথবা ফোন/ক্যামেরায় সরাসরি লাইভে আসতে পারেন।"
+                : "Skip intermediaries. Upload fresh photos, short harvest videos, or go live on camera to let nationwide wholesalers bid in real-time."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 shrink-0">
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex-1 sm:flex-none px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-md shadow-red-600/20"
+            >
+              <Radio className="w-4 h-4 animate-pulse" />
+              <span>{language === "bn" ? "🔴 লাইভে গিয়ে ডাক তুলুন" : "🔴 Go Live & Auction"}</span>
+            </button>
+
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex-1 sm:flex-none px-4 py-3 bg-agri-800 hover:bg-agri-900 text-white font-bold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-md shadow-agri-950/20"
+            >
+              <Camera className="w-4 h-4 text-harvest-300" />
+              <span>{language === "bn" ? "📸 ছবি/ভিডিও আপলোড" : "📸 Upload Photo/Video"}</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Oversupply Alert Notice if any */}
@@ -267,171 +266,12 @@ export default function FarmerDashboard() {
         </div>
       )}
 
-      {/* Create Listing / Start Auction Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-earth-200 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-earth-900 mb-1">
-              {language === "bn" ? "নতুন ফসলের তালিকা বা লাইভ নিলাম শুরু" : "List Agricultural Product / Start Auction"}
-            </h3>
-            <p className="text-xs text-earth-500 mb-4">
-              {language === "bn" ? "সরাসরি পাইকার, মিল ও সুপারশপের কাছে বিক্রির জন্য তালিকা তৈরি করুন" : "Set your expected price or start a competitive 30-minute live auction"}
-            </p>
-
-            <form onSubmit={handleCreateListing} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-earth-700 font-bold mb-1">
-                  {language === "bn" ? "ফসল নির্বাচন করুন:" : "Crop Commodity:"}
-                </label>
-                <select
-                  value={cropId}
-                  onChange={(e) => setCropId(e.target.value)}
-                  className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold"
-                >
-                  {CROPS_DATA.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.nameEn} ({c.nameBn})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-earth-700 font-bold mb-1">
-                  {language === "bn" ? "জাত / ভ্যারাইটি:" : "Variety:"}
-                </label>
-                <input
-                  type="text"
-                  value={variety}
-                  onChange={(e) => setVariety(e.target.value)}
-                  className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "পরিমাণ (কেজি):" : "Quantity (kg):"}
-                  </label>
-                  <input
-                    type="number"
-                    min={50}
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "শুরুর দর (টাকা/কেজি):" : "Starting Price (BDT/kg):"}
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={startingPrice}
-                    onChange={(e) => setStartingPrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "প্রত্যাশিত দর (টাকা/কেজি):" : "Expected Price:"}
-                  </label>
-                  <input
-                    type="number"
-                    min={startingPrice}
-                    value={expectedPrice}
-                    onChange={(e) => setExpectedPrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "গোপন রিজার্ভ মূল্য (টাকা/কেজি):" : "Private Reserve Price:"}
-                  </label>
-                  <input
-                    type="number"
-                    value={reservePrice}
-                    onChange={(e) => setReservePrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold"
-                    title="Hidden from public bidders"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Auction Toggle */}
-              <div className="p-3 bg-agri-50 rounded-xl border border-agri-200">
-                <label className="flex items-center gap-2 cursor-pointer font-bold text-agri-950">
-                  <input
-                    type="checkbox"
-                    checked={isAuction}
-                    onChange={(e) => setIsAuction(e.target.checked)}
-                    className="rounded text-agri-600 focus:ring-agri-500 w-4 h-4"
-                  />
-                  <span>{language === "bn" ? "লাইভ নিলাম শুরু করুন (System A)" : "Start Real-Time Live Auction (System A)"}</span>
-                </label>
-
-                {isAuction && (
-                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-agri-200">
-                    <div>
-                      <label className="block text-agri-900 font-semibold mb-1">
-                        {language === "bn" ? "নিলামের সময়কাল (মিনিট):" : "Duration (minutes):"}
-                      </label>
-                      <input
-                        type="number"
-                        min={5}
-                        max={180}
-                        value={durationMinutes}
-                        onChange={(e) => setDurationMinutes(Number(e.target.value))}
-                        className="w-full px-2 py-1 bg-white border border-agri-300 rounded-lg font-bold"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-agri-900 font-semibold mb-1">
-                        {language === "bn" ? "ন্যূনতম ধাপ (টাকা):" : "Min Increment (BDT):"}
-                      </label>
-                      <input
-                        type="number"
-                        min={1}
-                        value={minIncrement}
-                        onChange={(e) => setMinIncrement(Number(e.target.value))}
-                        className="w-full px-2 py-1 bg-white border border-agri-300 rounded-lg font-bold"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-earth-300 text-earth-700 rounded-xl font-semibold"
-                >
-                  {t.common.cancel}
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-5 py-2 bg-agri-700 hover:bg-agri-800 text-white rounded-xl font-bold shadow-md"
-                >
-                  {submitting ? t.common.loading : (language === "bn" ? "নিশ্চিত করুন" : "Publish Listing")}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Create Listing / Start Auction Modal with Photos, Video & Live Broadcast */}
+      <FarmerAuctionCreatorModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchDashboardData}
+      />
     </div>
   );
 }

@@ -3,14 +3,16 @@
 import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { Auction } from "@/types";
-import { Gavel, Clock, ShieldCheck, Filter } from "lucide-react";
+import { Gavel, Clock, ShieldCheck, Filter, PlusCircle, Radio, Camera } from "lucide-react";
 import LiveAuctionCard from "@/components/auctions/LiveAuctionCard";
+import FarmerAuctionCreatorModal from "@/components/auctions/FarmerAuctionCreatorModal";
 
 export default function AuctionsPage() {
-  const { language, t } = useApp();
+  const { language, t, currentRole } = useApp();
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const fetchAuctions = async () => {
     try {
@@ -53,8 +55,18 @@ export default function AuctionsPage() {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex items-center bg-white p-1 rounded-xl border border-earth-200 text-xs shadow-2xs">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Put Crop in Auction Button */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-4 py-2 bg-gradient-to-r from-red-600 to-agri-700 hover:from-red-700 hover:to-agri-800 text-white font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-md shadow-agri-950/20"
+          >
+            <Radio className="w-3.5 h-3.5 animate-pulse" />
+            <span>{language === "bn" ? "+ নিজের ফসল নিলামে তুলুন (ছবি/ভিডিও/লাইভ)" : "+ Put Crop in Auction (Photo/Video/Live)"}</span>
+          </button>
+
+          {/* Filters */}
+          <div className="flex items-center bg-white p-1 rounded-xl border border-earth-200 text-xs shadow-2xs">
           <button
             onClick={() => setFilterStatus("all")}
             className={`px-3 py-1.5 rounded-lg font-bold transition ${
@@ -82,6 +94,7 @@ export default function AuctionsPage() {
           </button>
         </div>
       </div>
+    </div>
 
       {/* Grid of Live Auction Cards */}
       {loading ? (
@@ -99,6 +112,13 @@ export default function AuctionsPage() {
           ))}
         </div>
       )}
+
+      {/* Auction Launch Modal */}
+      <FarmerAuctionCreatorModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchAuctions}
+      />
     </div>
   );
 }

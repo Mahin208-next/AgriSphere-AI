@@ -68,6 +68,8 @@ export async function POST(req: Request) {
       isAuction,
       status: isAuction ? "in_auction" : "active",
       images: body.images && body.images.length > 0 ? body.images : [crop.image],
+      videoUrl: body.videoUrl || undefined,
+      isLiveStream: !!body.isLiveStream,
       harvestDate: body.harvestDate || new Date().toISOString().split("T")[0],
       description: body.description || "",
       isDemo: false,
@@ -102,6 +104,9 @@ export async function POST(req: Request) {
         autoExtendTimeSeconds: 120, // +2 mins
         totalBids: 0,
         isDemo: false,
+        images: listing.images,
+        videoUrl: listing.videoUrl,
+        isLiveStream: listing.isLiveStream,
         createdAt: startTime.toISOString(),
       };
 

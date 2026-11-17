@@ -119,6 +119,8 @@ export interface ProductListing {
   auctionId?: string;
   status: 'active' | 'in_auction' | 'sold' | 'cancelled';
   images: string[];
+  videoUrl?: string;
+  isLiveStream?: boolean;
   harvestDate: string;
   description?: string;
   isDemo: boolean;
@@ -150,6 +152,9 @@ export interface Auction {
   totalBids: number;
   acceptedBidId?: string;
   isDemo: boolean;
+  images?: string[];
+  videoUrl?: string;
+  isLiveStream?: boolean;
   createdAt: string;
 }
 
