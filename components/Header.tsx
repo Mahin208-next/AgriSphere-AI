@@ -125,23 +125,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Tagline */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-agri-800 to-agri-600 flex items-center justify-center text-white shadow-md shadow-agri-900/20 group-hover:scale-105 transition-transform">
-              <Sprout className="w-6 h-6 text-harvest-300" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-lg text-agri-950 tracking-tight font-sans">
-                  AgriSphere
-                </span>
-                <span className="font-semibold text-xs px-1.5 py-0.5 rounded bg-agri-100 text-agri-800 border border-agri-200">
-                  MarketLink AI
-                </span>
-              </div>
-              <p className="text-[11px] text-earth-500 font-medium">
-                {language === "bn" ? "কৃষক ও বাজারের দ্বিমুখী সংযোগ" : "Two-Way Agri-Trading & Market Intelligence"}
-              </p>
-            </div>
+          <Link href="/" className="flex items-center gap-3 group py-1">
+            <img
+              src="/logo.png"
+              alt="KrishiSetu AI — Connecting Farmers to Every Market"
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02]"
+            />
           </Link>
 
           {/* Desktop Navigation */}

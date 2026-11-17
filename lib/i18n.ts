@@ -2,8 +2,8 @@ export type Language = "bn" | "en";
 
 export const TRANSLATIONS = {
   en: {
-    appName: "AgriSphere MarketLink AI",
-    tagline: "Connecting Every Farmer to Every Market",
+    appName: "KrishiSetu AI",
+    tagline: "Connecting Farmers to Every Market",
     nav: {
       home: "Home",
       marketplace: "Marketplace",
@@ -110,8 +110,8 @@ export const TRANSLATIONS = {
     },
   },
   bn: {
-    appName: "এগ্রিস্ফিয়ার মার্কেটলিংক এআই",
-    tagline: "প্রতিটি কৃষককে প্রতিটি বাজারের সাথে সংযুক্ত করা",
+    appName: "কৃষিসেতু এআই (KrishiSetu AI)",
+    tagline: "Connecting Farmers to Every Market — কৃষকদের প্রতিটি বাজারের সাথে সংযোগ",
     nav: {
       home: "মূলপাতা",
       marketplace: "কৃষি বাজার",

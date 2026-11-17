@@ -263,7 +263,7 @@ export default function ExportRadarView() {
           <p>
             {language === "bn"
               ? "প্রকৃত আন্তর্জাতিক বাণিজ্যের ক্ষেত্রে উদ্ভিদ সঙ্গনিরোধ সনদ (Phytosanitary Certificate - DAE), কীটনাশক অবশিষ্টাংশ পরীক্ষা (MRL Lab Testing), ব্যাংক লেটার অব ক্রেডিট (LC) বা কনফার্মড এসক্রো, এবং কাস্টমস ক্লিয়ারেন্স প্রযোজ্য। প্ল্যাটফর্মটি রপ্তানিকারক ও আমদানিকারকের সংযোগ ঘটায় কিন্তু সরাসরি কাস্টমস নিষ্পত্তিকারক নয়।"
-              : "Cross-border agricultural trade requires destination quarantine compliance, lab-tested MRL limits, official Phytosanitary inspection, and formal Letter of Credit (LC) banking facilities. AgriSphere MarketLink facilitates transparency and buyer discovery."}
+              : "Cross-border agricultural trade requires destination quarantine compliance, lab-tested MRL limits, official Phytosanitary inspection, and formal Letter of Credit (LC) banking facilities. KrishiSetu AI facilitates transparency and buyer discovery."}
           </p>
         </div>
       </div>

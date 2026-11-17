@@ -67,7 +67,7 @@ export async function POST(req: Request) {
           `\n💡 **পরামর্শ:** স্থানীয় হাট থেকে ঢাকার বড় মোকামে দাম কেজিপ্রতি ৳${(dhakaPrice?.wholesalePrice || 0) - (boguraPrice?.wholesalePrice || 0)} বেশি। আপনার ফসলের পরিমাণ ১ টন বা তার বেশি হলে ঢাকায় পাঠালে পরিবহন খরচ বাদেও বাড়তি নিট লাভ থাকবে।`;
 
         citations.push(`DAM Daily Agricultural Market Bulletin (তারিখ: ${new Date().toISOString().split("T")[0]})`);
-        citations.push(`AgriSphere Real-time Market Node (Verified Wholesale Arat Record)`);
+        citations.push(`KrishiSetu AI Real-time Market Node (Verified Wholesale Arat Record)`);
       } else {
         responseText = `দুঃখিত, আজ এই ফসলের নির্ধারিত সরাসরি দামের কোনো যাচাইকৃত রেকর্ড পাওয়া যায়নি। নিকটবর্তী কৃষি বিপণন কর্মকর্তা বা প্ল্যাটফর্মের তালিকাভুক্ত আড়তদারদের সাথে যোগাযোগ করতে পারেন।`;
       }
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
         `• প্রত্যাশিত নিট লাভ: ৳${second?.netEstimatedReturn.toLocaleString() || "N/A"}\n\n` +
         `⚠️ **সতর্কতা:** পরিবহন খরচ বগুড়া-ঢাকা করিডোরের পিকআপ/কাভার্ড ভ্যান ভাড়ার গড়ের উপর ভিত্তি করে প্রাক্কলিত। চূড়ান্ত সিদ্ধান্ত আপনার নিজের।`;
 
-      citations.push("AgriSphere Freight Distance Matrix (Bogura-Dhaka N5 Highway)");
+      citations.push("KrishiSetu AI Freight Distance Matrix (Bogura-Dhaka N5 Highway)");
       citations.push("DAM Wholesale Price Index");
     }
 
@@ -130,7 +130,7 @@ export async function POST(req: Request) {
       });
 
       responseText += `👉 আপনি আপনার ড্যাশবোর্ড থেকে **'Supplier Offer'** বাটনে ক্লিক করে সরাসরি নিজের দর প্রস্তাব পাঠাতে পারেন।`;
-      citations.push("AgriSphere Live Procurement Ledger");
+      citations.push("KrishiSetu AI Live Procurement Ledger");
     }
 
     // Intent 4: Export Opportunities (রপ্তানি / export / বিদেশ / আম / GlobalGAP)
@@ -161,7 +161,7 @@ export async function POST(req: Request) {
 
     // Default Fallback: Intelligent Agriculture Assistant
     else {
-      responseText = `নমস্কার! আমি **AgriSphere AI কৃষি বাজার সহকারী**।\n\n` +
+      responseText = `নমস্কার! আমি **KrishiSetu AI কৃষি বাজার সহকারী**।\n\n` +
         `আমি আপনাকে নিচের বিষয়গুলোতে সাহায্য করতে পারি:\n` +
         `১. আজকের পাইকারি ও খুচরা বাজার দর যাচাই (কাঁচা মরিচ, শসা, মিষ্টি কুমড়া, টমেটো, আলু ইত্যাদি)\n` +
         `২. ফসল কোথায় বিক্রি করলে খরচ বাদে বেশি লাভ হবে তা প্রাক্কলন\n` +

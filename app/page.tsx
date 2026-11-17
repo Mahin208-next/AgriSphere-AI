@@ -338,7 +338,7 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="text-lg font-bold text-agri-950">
-                {language === "bn" ? "AgriSphere বাংলা এআই কৃষি সহকারী" : "Bilingual AI Agricultural Market Assistant"}
+                {language === "bn" ? "KrishiSetu AI বাংলা কৃষি সহকারী" : "KrishiSetu AI Market Assistant"}
               </h3>
               <p className="text-xs text-agri-800 mt-1">
                 {language === "bn"

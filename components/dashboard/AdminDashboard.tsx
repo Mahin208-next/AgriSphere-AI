@@ -84,7 +84,7 @@ sweet_pumpkin,Sweet Pumpkin,mkt_shyambazar,Shyambazar Wholesale,Dhaka,35,46,2026
             {language === "bn" ? "প্ল্যাটফর্ম সুপারভিশন ও অডিট" : "Admin Oversight & DAM Observer"}
           </span>
           <h1 className="text-2xl font-black mt-2">
-            AgriSphere System Administration
+            KrishiSetu AI System Administration
           </h1>
           <p className="text-xs text-earth-300 mt-1">
             {language === "bn"

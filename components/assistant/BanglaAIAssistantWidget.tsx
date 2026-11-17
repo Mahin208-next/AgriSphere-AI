@@ -19,8 +19,8 @@ export default function BanglaAIAssistantWidget() {
       id: "msg_init",
       sender: "bot",
       text: language === "bn"
-        ? "নমস্কার! আমি AgriSphere AI কৃষি বাজার সহকারী। আজকের বাজার দর, ফসল বিক্রয়ের সেরা মোকাম, মিল বা কারখানার চাহিদা এবং বিদেশে রপ্তানি সম্পর্কিত যেকোনো প্রশ্ন করুন।"
-        : "Hello! I am AgriSphere AI Market Assistant. Ask me about current crop prices, optimal selling markets, agro-mill procurements, or agricultural export compliance.",
+        ? "নমস্কার! আমি KrishiSetu AI কৃষি বাজার সহকারী। আজকের বাজার দর, ফসল বিক্রয়ের সেরা মোকাম, মিল বা কারখানার চাহিদা এবং বিদেশে রপ্তানি সম্পর্কিত যেকোনো প্রশ্ন করুন।"
+        : "Hello! I am KrishiSetu AI Market Assistant. Ask me about current crop prices, optimal selling markets, agro-mill procurements, or agricultural export compliance.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -114,7 +114,7 @@ export default function BanglaAIAssistantWidget() {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold">
-                {language === "bn" ? "AgriSphere বাংলা এআই কৃষি সহকারী" : "Bangla AI Market Assistant"}
+                {language === "bn" ? "KrishiSetu AI বাংলা কৃষি সহকারী" : "KrishiSetu AI Market Assistant"}
               </h3>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-agri-700 text-agri-200">
                 RAG Active
@@ -133,8 +133,8 @@ export default function BanglaAIAssistantWidget() {
                 id: "msg_init",
                 sender: "bot",
                 text: language === "bn"
-                  ? "নমস্কার! আমি AgriSphere AI কৃষি বাজার সহকারী। আজকের বাজার দর, ফসল বিক্রয়ের সেরা মোকাম, মিল বা কারখানার চাহিদা এবং বিদেশে রপ্তানি সম্পর্কিত যেকোনো প্রশ্ন করুন।"
-                  : "Hello! I am AgriSphere AI Market Assistant. Ask me about current crop prices, optimal selling markets, agro-mill procurements, or agricultural export compliance.",
+                  ? "নমস্কার! আমি KrishiSetu AI কৃষি বাজার সহকারী। আজকের বাজার দর, ফসল বিক্রয়ের সেরা মোকাম, মিল বা কারখানার চাহিদা এবং বিদেশে রপ্তানি সম্পর্কিত যেকোনো প্রশ্ন করুন।"
+                  : "Hello! I am KrishiSetu AI Market Assistant. Ask me about current crop prices, optimal selling markets, agro-mill procurements, or agricultural export compliance.",
                 timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
               },
             ])

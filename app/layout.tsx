@@ -5,8 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "AgriSphere MarketLink AI | Two-Way Agricultural Trading & Intelligence",
-  description: "Connecting Bangladeshi farmers directly with agro-mills, wholesale traders, supermarkets, and international exporters with real-time auctions and AI net-return recommendations.",
+  title: "KrishiSetu AI — Connecting Farmers to Every Market",
+  description: "KrishiSetu AI connects Bangladeshi farmers directly with agro-mills, wholesale traders, supermarkets, and international exporters with real-time auctions and AI net-return recommendations.",
 };
 
 export default function RootLayout({
