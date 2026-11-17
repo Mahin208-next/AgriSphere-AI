@@ -1,7 +1,7 @@
 # AgriSphere MarketLink AI - Frontend
 
 > **A Two-Way AI-Powered Agricultural Trading & Market Intelligence Platform**  
-> FarmMarket Challenge | International Builder Hackathon 2026
+> KrishiSetu AI — Connecting Farmers to Every Market
 
 ---
 

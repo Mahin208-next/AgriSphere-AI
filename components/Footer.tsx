@@ -24,9 +24,9 @@ export default function Footer() {
             <p className="text-xs text-earth-400 leading-relaxed">
               {t.tagline}. {language === "bn" ? "কৃষক ও প্রাতিষ্ঠানিক ক্রেতাদের মাঝে সরাসরি দ্বিমুখী ডিজিটাল বিপণন ও এআই বাজার বুদ্ধিমত্তা।" : "A unified two-way agricultural trading and decision intelligence platform for Bangladesh."}
             </p>
-            <div className="flex items-center gap-2 text-xs text-harvest-400 font-medium">
+            <div className="flex items-center gap-2 text-xs text-agri-400 font-medium">
               <ShieldCheck className="w-4 h-4" />
-              <span>{language === "bn" ? "আন্তর্জাতিক বিল্ডার হ্যাকাথন প্রোটোটাইপ" : "International Builder Hackathon MVP"}</span>
+              <span>{language === "bn" ? "নিরাপদ ও স্বচ্ছ ডিজিটাল কৃষি বাজার" : "Secure Digital Agricultural Marketplace"}</span>
             </div>
           </div>
 

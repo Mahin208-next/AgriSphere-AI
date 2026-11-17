@@ -41,11 +41,6 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agri-800/80 border border-agri-600/60 text-xs font-semibold text-agri-200">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>FarmMarket International Hackathon 2026</span>
-          </div>
-
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
             {language === 'bn' ? (
               <>

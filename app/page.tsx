@@ -62,13 +62,6 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center max-w-3xl mx-auto space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-agri-800/80 text-agri-200 border border-agri-700/60 shadow-inner">
-              <Sparkles className="w-3.5 h-3.5 text-harvest-400" />
-              <span>{language === "bn" ? "আন্তর্জাতিক বিল্ডার হ্যাকাথন উদ্ভাবন" : "International Builder Hackathon Entry"}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-harvest-400" />
-              <span className="text-harvest-300">FarmMarket Challenge</span>
-            </div>
-
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
               {language === "bn" ? (
                 <>

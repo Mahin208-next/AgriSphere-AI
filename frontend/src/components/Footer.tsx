@@ -79,10 +79,10 @@ export const Footer: React.FC = () => {
 
         <div>
           <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">
-            {language === 'bn' ? 'হ্যাকথন মূল্যায়ন' : 'Hackathon Verification'}
+            {language === 'bn' ? 'প্ল্যাটফর্ম আর্কিটেকচার' : 'Platform Architecture'}
           </h4>
           <p className="text-xs text-earth-400 mb-2">
-            FarmMarket International Builder Challenge 2026.
+            KrishiSetu AI — Connecting Farmers to Every Market.
           </p>
           <div className="bg-earth-800/80 p-2.5 rounded-lg border border-earth-700/60 text-[11px] text-earth-300 space-y-1">
             <div>⚡ Full-Stack Express + React 18 + Prisma</div>

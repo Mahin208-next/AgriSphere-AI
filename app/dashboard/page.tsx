@@ -18,7 +18,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2 text-xs text-earth-700">
           <UserCheck className="w-4 h-4 text-agri-600" />
           <span className="font-bold text-earth-900">
-            {language === "bn" ? "ড্যাশবোর্ড মোড পরিবর্তন (জাজ ডেমো):" : "Active Role View:"}
+            {language === "bn" ? "ড্যাশবোর্ড মোড পরিবর্তন:" : "Active Role View:"}
           </span>
           <span className="font-semibold text-agri-800 bg-agri-50 px-2 py-0.5 rounded border border-agri-200">
             {currentUser?.name} ({t.roles[currentRole] || currentRole})
