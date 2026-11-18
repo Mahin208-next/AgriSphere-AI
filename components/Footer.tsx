@@ -18,7 +18,7 @@ export default function Footer() {
               <img
                 src="/logo.png"
                 alt="KrishiSetu AI — Connecting Farmers to Every Market"
-                className="h-10 w-auto object-contain bg-white/95 p-1 rounded-lg"
+                className="h-10 w-auto shrink-0 object-contain bg-white/95 p-1 rounded-lg"
               />
             </div>
             <p className="text-xs text-earth-400 leading-relaxed">
