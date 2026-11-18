@@ -466,7 +466,7 @@ export default function MarketplacePage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-earth-700 font-bold mb-1">
+                    <label className="text-earth-700 font-bold mb-1.5 h-5 flex items-center text-xs">
                       {language === "bn" ? "ফসলের ধরন / তালিকা:" : "Crop Commodity:"}
                     </label>
                     <select
@@ -484,7 +484,7 @@ export default function MarketplacePage() {
                           if (c) setPostVariety(`${c.nameBn} - বাছাইকৃত গ্রেড`);
                         }
                       }}
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                     >
                       <optgroup label={language === "bn" ? "জনপ্রিয় ফসল ও ফলসমূহ" : "Popular Produce"}>
                         {CROPS_DATA.map((c) => (
@@ -502,7 +502,7 @@ export default function MarketplacePage() {
                   </div>
 
                   <div>
-                    <label className="block text-earth-700 font-bold mb-1">
+                    <label className="text-earth-700 font-bold mb-1.5 h-5 flex items-center text-xs">
                       {language === "bn" ? "জাত / ভ্যারাইটি বিবরণ:" : "Variety / Spec:"}
                     </label>
                     <input
@@ -510,7 +510,7 @@ export default function MarketplacePage() {
                       value={postVariety}
                       onChange={(e) => setPostVariety(e.target.value)}
                       placeholder={language === "bn" ? "যেমন: বিন্দু, হিমসাগর, হাইব্রিড, ইত্যাদি" : "e.g., Himsagar, Hybrid"}
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-medium text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-medium text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                       required
                     />
                   </div>
@@ -525,7 +525,7 @@ export default function MarketplacePage() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-earth-700 font-semibold mb-1">
+                        <label className="block text-earth-700 font-semibold mb-1 text-xs">
                           {language === "bn" ? "ফসলের বাংলা নাম লিখুন *" : "Crop Name (Bangla) *"}
                         </label>
                         <input
@@ -534,11 +534,11 @@ export default function MarketplacePage() {
                           value={customCropNameBn}
                           onChange={(e) => setCustomCropNameBn(e.target.value)}
                           placeholder="যেমন: লিচু, আম, ড্রাগন ফল, পেয়ারা, তরমুজ..."
-                          className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-earth-900 font-bold"
+                          className="w-full h-11 px-3 bg-white border border-amber-300 rounded-xl text-earth-900 font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="block text-earth-700 font-semibold mb-1">
+                        <label className="block text-earth-700 font-semibold mb-1 text-xs">
                           {language === "bn" ? "ইংরেজি নাম (ঐচ্ছিক):" : "Crop Name (English):"}
                         </label>
                         <input
@@ -546,7 +546,7 @@ export default function MarketplacePage() {
                           value={customCropNameEn}
                           onChange={(e) => setCustomCropNameEn(e.target.value)}
                           placeholder="e.g. Litchi, Dragon Fruit"
-                          className="w-full px-3 py-2 bg-white border border-earth-300 rounded-lg text-earth-900"
+                          className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl text-earth-900 focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -554,7 +554,7 @@ export default function MarketplacePage() {
                 )}
               </div>
 
-              {/* SECTION 2: QUANTITY, WEIGHT & PRICE SETTING (EDITABLE NUMBERS & LIVE TOTAL) */}
+              {/* SECTION 2: QUANTITY, WEIGHT & PRICE SETTING (UNIFORM ALIGNED BOXES & LIVE TOTAL) */}
               <div className="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-200/80 space-y-3.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-emerald-950 font-bold text-xs uppercase tracking-wide">
@@ -566,11 +566,11 @@ export default function MarketplacePage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                  {/* Quantity input */}
-                  <div>
-                    <label className="block text-earth-700 font-bold mb-1">
-                      {language === "bn" ? "বিক্রয়যোগ্য পরিমাণ (ওজন):" : "Total Quantity:"}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-start">
+                  {/* 1. Quantity input */}
+                  <div className="flex flex-col">
+                    <label className="text-earth-700 font-bold mb-1.5 h-6 flex items-center text-xs whitespace-nowrap">
+                      {language === "bn" ? "বিক্রয়যোগ্য পরিমাণ:" : "Total Quantity:"}
                     </label>
                     <input
                       type="number"
@@ -580,10 +580,10 @@ export default function MarketplacePage() {
                       value={postQuantity}
                       onChange={(e) => setPostQuantity(e.target.value)}
                       placeholder="1000"
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-black text-base text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-bold text-sm text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none transition"
                     />
                     {/* Quick increment pills */}
-                    <div className="flex items-center gap-1.5 mt-1.5">
+                    <div className="flex items-center gap-1.5 mt-2 h-5">
                       {[100, 500, 1000].map((delta) => (
                         <button
                           key={delta}
@@ -597,29 +597,32 @@ export default function MarketplacePage() {
                     </div>
                   </div>
 
-                  {/* Unit Selector */}
-                  <div>
-                    <label className="block text-earth-700 font-bold mb-1">
-                      {language === "bn" ? "পরিমাপের একক (Unit):" : "Unit of Measure:"}
+                  {/* 2. Unit Selector */}
+                  <div className="flex flex-col">
+                    <label className="text-earth-700 font-bold mb-1.5 h-6 flex items-center text-xs whitespace-nowrap">
+                      {language === "bn" ? "পরিমাপের একক:" : "Unit of Measure:"}
                     </label>
                     <select
                       value={postUnit}
                       onChange={(e) => setPostUnit(e.target.value as any)}
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-bold text-sm text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none transition cursor-pointer"
                     >
                       <option value="kg">কেজি (kg)</option>
                       <option value="mon">মণ (Mon - 40 kg)</option>
                       <option value="tonne">টন (Tonne)</option>
                     </select>
+                    <div className="text-[10px] text-earth-500 mt-2 h-5 flex items-center font-medium">
+                      {postUnit === "kg" ? "১ কেজি = ১,০০০ গ্রাম" : postUnit === "mon" ? "১ মণ = ৪০ কেজি" : "১ টন = ১,০০০ কেজি"}
+                    </div>
                   </div>
 
-                  {/* Price input */}
-                  <div>
-                    <label className="block text-earth-700 font-bold mb-1">
-                      {language === "bn" ? "নির্ধারিত বিক্রয় মূল্য (টাকা/একক):" : "Direct Price (BDT/unit):"}
+                  {/* 3. Price input */}
+                  <div className="flex flex-col">
+                    <label className="text-earth-700 font-bold mb-1.5 h-6 flex items-center text-xs whitespace-nowrap">
+                      {language === "bn" ? "নির্ধারিত দর (টাকা/একক):" : "Direct Price (BDT):"}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 top-2.5 text-base font-bold text-emerald-700">৳</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-earth-500 select-none">৳</span>
                       <input
                         type="number"
                         step="any"
@@ -628,10 +631,12 @@ export default function MarketplacePage() {
                         value={postPrice}
                         onChange={(e) => setPostPrice(e.target.value)}
                         placeholder="140"
-                        className="w-full pl-7 pr-3 py-2.5 bg-emerald-50 border border-emerald-400 rounded-xl font-black text-base text-emerald-950 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                        className="w-full h-11 pl-7 pr-3 bg-white border border-earth-300 rounded-xl font-bold text-sm text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none transition"
                       />
                     </div>
-                    <span className="text-[10px] text-earth-500 mt-1 block">প্রতি {postUnit === "kg" ? "কেজি" : postUnit === "mon" ? "মণ" : "টন"} এর দর</span>
+                    <div className="text-[10px] text-earth-500 mt-2 h-5 flex items-center font-medium">
+                      প্রতি {postUnit === "kg" ? "কেজি" : postUnit === "mon" ? "মণ" : "টন"} এর পাইকারি মূল্য
+                    </div>
                   </div>
                 </div>
 
@@ -661,13 +666,13 @@ export default function MarketplacePage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-earth-700 font-bold mb-1">
+                    <label className="text-earth-700 font-bold mb-1.5 h-5 flex items-center text-xs">
                       {language === "bn" ? "মান ও গ্রেড:" : "Quality Grade:"}
                     </label>
                     <select
                       value={postGrade}
                       onChange={(e) => setPostGrade(e.target.value as any)}
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                     >
                       <option value="Grade A">Grade A (সুপারশপ/রপ্তানি মান — সেরা গুণমান)</option>
                       <option value="Grade B">Grade B (সাধারণ পাইকারি আড়ত মান)</option>
@@ -676,13 +681,13 @@ export default function MarketplacePage() {
                   </div>
 
                   <div>
-                    <label className="block text-earth-700 font-bold mb-1">
+                    <label className="text-earth-700 font-bold mb-1.5 h-5 flex items-center text-xs">
                       {language === "bn" ? "অবস্থান (জেলা):" : "District:"}
                     </label>
                     <select
                       value={postDistrict}
                       onChange={(e) => setPostDistrict(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs"
+                      className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                     >
                       {BANGLADESH_DISTRICTS.map((d) => (
                         <option key={d.id} value={d.nameEn}>
@@ -694,7 +699,7 @@ export default function MarketplacePage() {
                 </div>
 
                 <div>
-                  <label className="block text-earth-700 font-bold mb-1">
+                  <label className="text-earth-700 font-bold mb-1.5 h-5 flex items-center text-xs">
                     {language === "bn" ? "উপজেলা / মোকামের ঠিকানা:" : "Upazila / Local Hub:"}
                   </label>
                   <input
@@ -702,7 +707,7 @@ export default function MarketplacePage() {
                     value={postUpazila}
                     onChange={(e) => setPostUpazila(e.target.value)}
                     placeholder="যেমন: শেরপুর / মহাস্থান মোকাম"
-                    className="w-full px-3 py-2 bg-white border border-earth-300 rounded-xl font-medium text-earth-900"
+                    className="w-full h-11 px-3 bg-white border border-earth-300 rounded-xl font-medium text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600 focus:outline-none"
                   />
                 </div>
               </div>
