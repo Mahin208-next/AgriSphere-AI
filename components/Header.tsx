@@ -4,24 +4,25 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useApp } from "@/context/AppContext";
-import { 
-  Sprout, 
-  Gavel, 
-  TrendingUp, 
-  Building2, 
-  Globe2, 
-  Bot, 
-  LayoutDashboard, 
-  ShieldCheck, 
-  UserCheck, 
-  Menu, 
-  X, 
+import {
+  Sprout,
+  Gavel,
+  TrendingUp,
+  Building2,
+  Globe2,
+  Bot,
+  LayoutDashboard,
+  UserCheck,
+  Menu,
+  X,
   ChevronDown,
-  ShoppingBag
+  ShoppingBag,
+  LogIn,
+  LogOut
 } from "lucide-react";
 
 export default function Header() {
-  const { currentUser, allUsers, currentRole, language, setLanguage, t, switchUserRole } = useApp();
+  const { currentUser, allUsers, currentRole, language, setLanguage, t, switchUserRole, logout } = useApp();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
@@ -36,9 +37,12 @@ export default function Header() {
     { href: "/assistant", label: t.nav.assistant, icon: Bot },
   ];
 
+  // Exclude admin from public header role switchers
+  const publicUsers = allUsers.filter((u) => u.role !== "admin");
+
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-earth-200 shadow-sm">
-      {/* Top Demo Bar & Role Switcher for Hackathon Judges */}
+      {/* Top Demo Bar & Role Switcher */}
       <div className="bg-agri-950 text-agri-100 text-xs py-1.5 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -58,22 +62,31 @@ export default function Header() {
                 className="flex items-center gap-1.5 bg-agri-800 hover:bg-agri-700 text-white px-2.5 py-1 rounded text-xs transition"
               >
                 <UserCheck className="w-3.5 h-3.5 text-agri-300" />
-                <span>{t.common.activeRole}:</span>
+                <span>{currentUser ? `${t.common.activeRole}:` : (language === "bn" ? "প্রোফাইল:" : "Profile:")}</span>
                 <span className="font-semibold text-harvest-300">
-                  {currentUser?.name || "Loading..."} ({t.roles[currentRole] || currentRole})
+                  {currentUser
+                    ? `${currentUser.name} (${t.roles[currentRole || "farmer"] || currentRole})`
+                    : (language === "bn" ? "সাধারণ পরিদর্শক" : "Public Visitor")}
                 </span>
                 <ChevronDown className="w-3 h-3 text-agri-300" />
               </button>
 
               {roleDropdownOpen && (
-                <div 
+                <div
                   className="absolute right-0 mt-1 w-72 bg-white rounded-lg shadow-xl border border-earth-200 py-1.5 z-50 text-earth-800"
                   onMouseLeave={() => setRoleDropdownOpen(false)}
                 >
-                  <div className="px-3 py-1.5 border-b border-earth-100 text-[11px] font-medium text-earth-500 uppercase tracking-wider">
-                    {t.common.switchRole} (Judge Preview)
+                  <div className="px-3 py-1.5 border-b border-earth-100 text-[11px] font-medium text-earth-500 uppercase tracking-wider flex items-center justify-between">
+                    <span>{t.common.switchRole} (Preview)</span>
+                    <Link
+                      href="/login"
+                      onClick={() => setRoleDropdownOpen(false)}
+                      className="text-agri-700 hover:underline font-bold text-[10px]"
+                    >
+                      {language === "bn" ? "লগইন পাতা" : "Login Page"}
+                    </Link>
                   </div>
-                  {allUsers.map((u) => (
+                  {publicUsers.map((u) => (
                     <button
                       key={u.id}
                       onClick={() => {
@@ -85,7 +98,9 @@ export default function Header() {
                       }`}
                     >
                       <div>
-                        <div className="font-medium text-earth-900">{language === "bn" ? (u.nameBn || u.name) : u.name}</div>
+                        <div className="font-medium text-earth-900">
+                          {language === "bn" ? (u.nameBn || u.name) : u.name}
+                        </div>
                         <div className="text-[11px] text-earth-500">{u.companyName || u.district}</div>
                       </div>
                       <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-earth-100 text-earth-700 font-semibold">
@@ -93,6 +108,20 @@ export default function Header() {
                       </span>
                     </button>
                   ))}
+                  {currentUser && (
+                    <div className="border-t border-earth-100 mt-1 pt-1 px-2">
+                      <button
+                        onClick={() => {
+                          logout();
+                          setRoleDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-2 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded flex items-center gap-1.5 font-semibold"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>{language === "bn" ? "লগআউট করুন" : "Sign Out"}</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -162,13 +191,32 @@ export default function Header() {
 
           {/* Right Action CTA */}
           <div className="hidden sm:flex items-center gap-2">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-agri-700 hover:bg-agri-800 text-white text-xs font-semibold shadow-sm transition"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" />
-              <span>{t.nav.dashboard}</span>
-            </Link>
+            {currentUser ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-agri-700 hover:bg-agri-800 text-white text-xs font-semibold shadow-sm transition"
+                >
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  <span>{t.nav.dashboard}</span>
+                </Link>
+                <button
+                  onClick={() => logout()}
+                  title={language === "bn" ? "লগআউট" : "Logout"}
+                  className="p-2 rounded-lg text-earth-500 hover:text-red-600 hover:bg-red-50 border border-earth-200 transition"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-agri-800 hover:bg-agri-900 text-white text-xs font-bold shadow-sm transition"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>{language === "bn" ? "লগইন করুন" : "Sign In"}</span>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -210,21 +258,46 @@ export default function Header() {
               </Link>
             );
           })}
-          <Link
-            href="/dashboard"
-            onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium ${
-              pathname === "/dashboard" ? "bg-agri-100 text-agri-900 font-semibold" : "text-earth-700 hover:bg-earth-50"
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <LayoutDashboard className="w-4 h-4 text-agri-700" />
-              <span>{t.nav.dashboard}</span>
-            </div>
-          </Link>
+
+          <div className="pt-2 border-t border-earth-100 mt-2 space-y-1">
+            {currentUser ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium ${
+                    pathname === "/dashboard" ? "bg-agri-100 text-agri-900 font-semibold" : "text-earth-700 hover:bg-earth-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <LayoutDashboard className="w-4 h-4 text-agri-700" />
+                    <span>{t.nav.dashboard}</span>
+                  </div>
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>{language === "bn" ? "লগআউট" : "Logout"}</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold bg-agri-800 text-white"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>{language === "bn" ? "লগইন করুন" : "Sign In"}</span>
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </header>
   );
 }
-
