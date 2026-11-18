@@ -11,16 +11,16 @@ import {
   Building2,
   Store,
   Globe2,
-  Lock,
+  ShieldCheck,
   Phone,
   KeyRound,
   ArrowRight,
-  CheckCircle2,
   Sparkles,
   AlertCircle,
   Eye,
   EyeOff,
-  UserCheck
+  UserCheck,
+  ChevronDown
 } from "lucide-react";
 
 interface RoleOption {
@@ -45,13 +45,13 @@ interface RoleOption {
   };
 }
 
-const PUBLIC_ROLES: RoleOption[] = [
+const ALL_ROLES: RoleOption[] = [
   {
     role: "farmer",
     titleBn: "কৃষক / খামারি",
     titleEn: "Farmer / Producer",
-    descBn: "নিজের ফসল লাইভ নিলামে তুলুন, ছবি ও ভিডিও আপলোড করুন, এআই পূর্বাভাস ও সরাসরি দাম পান।",
-    descEn: "Host live crop auctions, upload photos/videos, access AI market predictions & best prices.",
+    descBn: "নিজের ফসল সরাসরি লাইভ নিলামে তুলুন, ডিজিটাল দরদাম ও ন্যায্য মূল্য গ্রহণ করুন।",
+    descEn: "Host live crop auctions, manage harvests & connect directly with buyers.",
     icon: Sprout,
     color: "text-emerald-700",
     bgLight: "bg-emerald-50",
@@ -72,19 +72,19 @@ const PUBLIC_ROLES: RoleOption[] = [
     titleBn: "পাইকারি ক্রেতা / আড়তদার",
     titleEn: "Wholesaler / Aratdar",
     descBn: "সরাসরি কৃষকের নিলামে বিড করুন, বাল্ক লট কিনুন এবং ডিজিটাল ইনভয়েস পরিচালনা করুন।",
-    descEn: "Place real-time bids on farm auctions, buy wholesale lots with transparent escrows.",
+    descEn: "Place real-time bids on farm auctions & source wholesale agricultural produce.",
     icon: ShoppingBag,
     color: "text-blue-700",
     bgLight: "bg-blue-50",
     borderLight: "border-blue-200",
     badgeBn: "পাইকারি বাজার",
-    badgeEn: "Wholesale Market",
+    badgeEn: "Wholesale Trading",
     demoUser: {
       id: "usr_buyer_mokbul",
-      nameBn: "হাজী মকবুল হোসেন",
+      nameBn: "হাজী মোকবুল হোসেন",
       nameEn: "Haji Mokbul Hossain",
-      phone: "+880 1819-876543",
-      companyBn: "মেসার্স মকবুল ট্রেডার্স (কাওরান বাজার, ঢাকা)",
+      phone: "+880 1819-345678",
+      companyBn: "মেসার্স মোকবুল এন্টারপ্রাইজ (কাওরান বাজার, ঢাকা)",
       companyEn: "Mokbul Traders, Karwan Bazar, Dhaka",
     },
   },
@@ -93,7 +93,7 @@ const PUBLIC_ROLES: RoleOption[] = [
     titleBn: "এগ্রো-মিল ও খাদ্য কারখানা",
     titleEn: "Agro-Processor / Factory",
     descBn: "বাল্ক প্রকিউরমেন্ট রিকোয়েস্ট তৈরি করুন, কৃষকদের কাছ থেকে সরাসরি সরবরাহ প্রস্তাব নিন।",
-    descEn: "Post bulk crop demand RFQs, receive verified farmer offers with quality tests.",
+    descEn: "Post bulk crop demand RFQs & receive verified farmer supplier contracts.",
     icon: Building2,
     color: "text-amber-700",
     bgLight: "bg-amber-50",
@@ -102,18 +102,18 @@ const PUBLIC_ROLES: RoleOption[] = [
     badgeEn: "Industrial Procurement",
     demoUser: {
       id: "usr_factory_pran",
-      nameBn: "প্রাণ এগ্রো প্রসেসিং লিমিটেড",
-      nameEn: "PRAN Agro Processing Ltd",
-      phone: "+880 1912-345678",
-      companyBn: "প্রাণ-আরএফএল গ্রুপ প্রকিউরমেন্ট উইং",
-      companyEn: "PRAN-RFL Group Procurement Wing",
+      nameBn: "এসিআই ও প্রাণ এগ্রো প্রসেসিং হাব",
+      nameEn: "ACI & PRAN Agro Processing Hub",
+      phone: "+880 1912-789012",
+      companyBn: "অ্যাপেক্স এগ্রো ফুডস অ্যান্ড মিলিং কর্পোরেশন",
+      companyEn: "Apex Agro Foods & Milling Corp",
     },
   },
   {
     role: "retailer",
     titleBn: "সুপারশপ ও রিটেইলার",
     titleEn: "Supermarket / Retailer",
-    descBn: "দৈনিক তাজা ফল ও সবজি ফার্ম-টু-শেলফ সোর্সিং, প্রিমিয়াম গ্রেড কোয়ালিটি ও ট্রেসেবিলিটি।",
+    descBn: "দৈনিক তাজা ফল ও সবজি সরাসরি ফার্ম-টু-শেলফ সোর্সিং ও ট্রেসেবিলিটি মনিটরিং।",
     descEn: "Farm-to-shelf direct sourcing for fresh produce with QR traceability & GAP checks.",
     icon: Store,
     color: "text-purple-700",
@@ -123,10 +123,10 @@ const PUBLIC_ROLES: RoleOption[] = [
     badgeEn: "Retail Chain Sourcing",
     demoUser: {
       id: "usr_retailer_shwapno",
-      nameBn: "স্বপ্ন সুপারশপ (এসিআই লজিস্টিকস)",
-      nameEn: "Shwapno Super Shop (ACI Logistics)",
-      phone: "+880 1611-456789",
-      companyBn: "স্বপ্ন ফ্রেশ প্রডিউস নেটওয়ার্ক",
+      nameBn: "স্বপ্ন সুপারশপ ক্রয় কেন্দ্র",
+      nameEn: "Shwapno Direct Sourcing Hub",
+      phone: "+880 1714-556677",
+      companyBn: "স্বপ্ন রিটেইল নেটওয়ার্ক (এসিআই লজিস্টিকস)",
       companyEn: "Shwapno Fresh Produce Division",
     },
   },
@@ -135,20 +135,62 @@ const PUBLIC_ROLES: RoleOption[] = [
     titleBn: "কৃষি পণ্য রপ্তানিকারক",
     titleEn: "Agricultural Exporter",
     descBn: "আন্তর্জাতিক আরএফকিউ (RFQ) রেসপন্স, ফাইটোস্যানিটারি কমপ্লায়েন্স ও বৈদেশিক মুদ্রা চুক্তি।",
-    descEn: "Respond to global buyer inquiries with phytosanitary compliance & FOB trade tracking.",
+    descEn: "Respond to global buyer inquiries with phytosanitary compliance & FOB tracking.",
     icon: Globe2,
     color: "text-teal-700",
     bgLight: "bg-teal-50",
     borderLight: "border-teal-200",
     badgeBn: "আন্তর্জাতিক বাণিজ্য",
-    badgeEn: "Global Agricultural Trade",
+    badgeEn: "Global Trade",
     demoUser: {
       id: "usr_exporter_bengal",
-      nameBn: "বেঙ্গল ফ্রেশ প্রোডাক্টস লিমিটেড",
-      nameEn: "Bengal Fresh Produce Ltd",
-      phone: "+880 1715-998877",
+      nameBn: "বেঙ্গল ফ্রেশ এগ্রো এক্সপোর্টস লিঃ",
+      nameEn: "Bengal Fresh Agro Exports Ltd",
+      phone: "+880 1713-998877",
       companyBn: "বাংলাদেশ এগ্রো এক্সপোর্টার্স অ্যাসোসিয়েশন",
       companyEn: "Bangladesh Agro Exporters Association",
+    },
+  },
+  {
+    role: "importer",
+    titleBn: "আন্তর্জাতিক আমদানিকারক (দুবাই / জিসিসি)",
+    titleEn: "International Importer (Dubai / GCC)",
+    descBn: "বাংলাদেশি সার্টিফাইড তাজা ফল ও সবজির জন্য সরাসরি আন্তর্জাতিক কোটেশন ও এলসি চুক্তি।",
+    descEn: "Direct B2B import procurement with certified GAP standards from Bangladesh.",
+    icon: Globe2,
+    color: "text-sky-700",
+    bgLight: "bg-sky-50",
+    borderLight: "border-sky-200",
+    badgeBn: "আন্তর্জাতিক আমদানি",
+    badgeEn: "Global Importer",
+    demoUser: {
+      id: "usr_importer_gulf",
+      nameBn: "আল-মদিনা ফ্রেশ ফ্রুটস অ্যান্ড ভেজিটেবলস",
+      nameEn: "Al-Madina Fresh Fruits & Veg LLC",
+      phone: "+971 4 298 7654",
+      companyBn: "আল-মদিনা জেনারেল ট্রেডিং এলএলসি (দুবাই, সংযুক্ত আরব আমিরাত)",
+      companyEn: "Al-Madina General Trading LLC, Dubai",
+    },
+  },
+  {
+    role: "admin",
+    titleBn: "সিস্টেম অ্যাডমিনিস্ট্রেটর ও রেগুলেটর",
+    titleEn: "System Administrator & Regulatory Auditor",
+    descBn: "প্ল্যাটফর্ম নিরাপত্তা, DAM বাজার দর যাচাই, অডিট লগ এবং নিয়ন্ত্রক ব্যবস্থাপনা।",
+    descEn: "Platform regulatory governance, audit trail verification & DAM price indexing.",
+    icon: ShieldCheck,
+    color: "text-rose-700",
+    bgLight: "bg-rose-50",
+    borderLight: "border-rose-200",
+    badgeBn: "কেন্দ্রীয় প্রশাসন",
+    badgeEn: "Platform Admin",
+    demoUser: {
+      id: "usr_admin_platform",
+      nameBn: "ঢাকা সেন্ট্রাল প্ল্যাটফর্ম অ্যাডমিনিস্ট্রেটর",
+      nameEn: "Central Platform Administrator",
+      phone: "+880 1700-000001",
+      companyBn: "কৃষিসেতু ও ডিএএম রেগুলেটরি সেল",
+      companyEn: "KrishiSetu & DAM Regulatory Cell",
     },
   },
 ];
@@ -158,7 +200,7 @@ function LoginFormContent() {
   const searchParams = useSearchParams();
   const redirectTarget = searchParams.get("redirect") || "/dashboard";
 
-  const { login, loginByRole, language } = useApp();
+  const { login, loginByRole, adminLogin, language, setLanguage } = useApp();
 
   const [selectedRole, setSelectedRole] = useState<UserRole>("farmer");
   const [phoneNumber, setPhoneNumber] = useState("01711234567");
@@ -167,14 +209,21 @@ function LoginFormContent() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const currentRoleConfig = PUBLIC_ROLES.find((r) => r.role === selectedRole) || PUBLIC_ROLES[0];
+  const currentRoleConfig = ALL_ROLES.find((r) => r.role === selectedRole) || ALL_ROLES[0];
+  const Icon = currentRoleConfig.icon;
 
-  const handleRoleSelect = (role: UserRole) => {
+  const handleRoleChange = (role: UserRole) => {
     setSelectedRole(role);
     setErrorMsg("");
-    const target = PUBLIC_ROLES.find((r) => r.role === role);
+    const target = ALL_ROLES.find((r) => r.role === role);
     if (target) {
-      setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
+      if (role === "admin") {
+        setPassword("admin2026");
+        setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
+      } else {
+        setPassword("demo1234");
+        setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
+      }
     }
   };
 
@@ -184,7 +233,18 @@ function LoginFormContent() {
     setErrorMsg("");
 
     try {
-      // Login by selected demo role user
+      if (selectedRole === "admin") {
+        const res = await adminLogin(password || "admin2026");
+        if (res.success) {
+          router.push("/admin");
+          return;
+        } else {
+          setErrorMsg(res.error || (language === "bn" ? "ভুল অ্যাডমিন পাসকি।" : "Invalid admin passkey."));
+          return;
+        }
+      }
+
+      // Try login by selected demo role user ID
       const success = await login(currentRoleConfig.demoUser.id);
       if (success) {
         router.push(redirectTarget);
@@ -209,162 +269,173 @@ function LoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfbf9] py-10 px-4 sm:px-6 flex flex-col justify-center">
-      <div className="max-w-4xl mx-auto w-full space-y-8">
-        {/* Header Branding */}
-        <div className="text-center space-y-3">
+    <div className="min-h-screen bg-[#fcfbf9] py-8 sm:py-12 px-3 sm:px-6 flex flex-col justify-center">
+      <div className="max-w-xl mx-auto w-full space-y-5 sm:space-y-6">
+        {/* Top Header & Logo */}
+        <div className="text-center space-y-2.5 sm:space-y-3">
           <Link href="/" className="inline-flex items-center gap-2 group">
             <img
               src="/logo.png"
               alt="KrishiSetu AI"
-              className="h-14 sm:h-16 w-auto object-contain mx-auto transition-transform group-hover:scale-105"
+              className="h-12 sm:h-16 w-auto object-contain mx-auto transition-transform group-hover:scale-105"
             />
           </Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">
-              {language === "bn" ? "ব্যবহারকারী লগইন ও ভূমিকা নির্বাচন" : "Portal Login & Role Selection"}
+            <h1 className="text-xl sm:text-3xl font-extrabold text-earth-900 tracking-tight leading-snug">
+              {language === "bn" ? "লগইন পোর্টাল" : "Sign In to Your Account"}
             </h1>
-            <p className="text-earth-600 text-sm sm:text-base mt-1 max-w-xl mx-auto">
+            <p className="text-earth-600 text-xs sm:text-sm mt-1">
               {language === "bn"
-                ? "আপনার ভূমিকা (Role) নির্বাচন করে সিস্টেমে প্রবেশ করুন। সাধারণ পরিদর্শকরা যেকোনো সময় মুক্তভাবে মূল সাইট পরিদর্শন করতে পারবেন।"
-                : "Select your active business role to sign in. Public visitors can freely explore the public marketplace without logging in."}
+                ? "আপনার অ্যাকাউন্টে প্রবেশ করতে কীভাবে লগইন করতে চান তা নির্বাচন করুন"
+                : "Select how you want to log in and sign in with your role profile"}
             </p>
           </div>
         </div>
 
-        {/* Role Selector Grid */}
-        <div className="space-y-3">
-          <label className="block text-xs font-bold uppercase tracking-wider text-earth-700">
-            {language === "bn" ? "১. আপনার ভূমিকা নির্বাচন করুন (Select Role):" : "1. Select Your Role:"}
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {PUBLIC_ROLES.map((r) => {
-              const Icon = r.icon;
-              const isSelected = selectedRole === r.role;
-              return (
-                <button
-                  type="button"
-                  key={r.role}
-                  onClick={() => handleRoleSelect(r.role)}
-                  className={`relative text-left p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer flex flex-col justify-between ${
-                    isSelected
-                      ? `bg-white ${r.borderLight} shadow-md ring-2 ring-agri-600 ring-offset-1`
-                      : "bg-white border-earth-200 hover:border-earth-300 hover:bg-earth-50/50 shadow-2xs"
-                  }`}
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className={`w-10 h-10 rounded-lg ${r.bgLight} flex items-center justify-center ${r.color}`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-earth-100 text-earth-700">
-                        {language === "bn" ? r.badgeBn : r.badgeEn}
-                      </span>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-sm text-earth-900">
-                        {language === "bn" ? r.titleBn : r.titleEn}
-                      </h3>
-                      <p className="text-xs text-earth-600 mt-1 line-clamp-2">
-                        {language === "bn" ? r.descBn : r.descEn}
-                      </p>
-                    </div>
-                  </div>
+        {/* Main Login Card */}
+        <div className="bg-white rounded-2xl border border-earth-200 shadow-md p-4 sm:p-8 space-y-5 sm:space-y-6">
+          {/* How do you want to login? Dropdown */}
+          <div className="space-y-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-earth-700 flex flex-col min-[420px]:flex-row min-[420px]:items-center justify-between gap-1">
+              <span className="flex items-center gap-1.5">
+                <UserCheck className="w-4 h-4 text-agri-700 shrink-0" />
+                <span>
+                  {language === "bn"
+                    ? "আপনি কীভাবে লগইন করতে চান? (ভূমিকা নির্বাচন করুন):"
+                    : "How do you want to log in? (Select Role):"}
+                </span>
+              </span>
+              <span className="text-[11px] font-semibold text-agri-700 shrink-0">
+                {language === "bn" ? "৭টি ভূমিকা উপলব্ধ" : "7 Roles Available"}
+              </span>
+            </label>
 
-                  <div className="mt-3 pt-3 border-t border-earth-100 flex items-center justify-between text-[11px]">
-                    <span className="text-earth-500 font-medium truncate">
-                      {language === "bn" ? r.demoUser.nameBn : r.demoUser.nameEn}
-                    </span>
-                    {isSelected && (
-                      <span className="flex items-center gap-1 font-bold text-agri-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-agri-600" />
-                        {language === "bn" ? "নির্বাচিত" : "Active"}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Selected Role Form Container */}
-        <div className="bg-white rounded-2xl border border-earth-200 shadow-sm p-6 sm:p-8 space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-earth-100 pb-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-xl ${currentRoleConfig.bgLight} flex items-center justify-center ${currentRoleConfig.color}`}>
-                <currentRoleConfig.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-bold text-earth-900">
-                    {language === "bn" ? currentRoleConfig.titleBn : currentRoleConfig.titleEn}
-                  </h2>
-                  <span className="text-[11px] font-semibold bg-agri-100 text-agri-800 px-2 py-0.5 rounded">
-                    {language === "bn" ? "অনুমোদিত অ্যাকাউন্ট" : "Verified Account"}
-                  </span>
-                </div>
-                <p className="text-xs text-earth-600">
-                  {language === "bn" ? currentRoleConfig.demoUser.companyBn : currentRoleConfig.demoUser.companyEn}
-                </p>
+            <div className="relative">
+              <select
+                value={selectedRole}
+                onChange={(e) => handleRoleChange(e.target.value as UserRole)}
+                className="w-full appearance-none bg-earth-50/80 hover:bg-earth-50 border-2 border-agri-600/40 focus:border-agri-700 focus:bg-white focus:ring-4 focus:ring-agri-600/10 rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-earth-900 cursor-pointer transition shadow-2xs pr-10"
+              >
+                {ALL_ROLES.map((r) => (
+                  <option key={r.role} value={r.role} className="py-2 text-earth-900 bg-white">
+                    {language === "bn"
+                      ? `${r.titleBn} — (${r.titleEn})`
+                      : `${r.titleEn} — (${r.titleBn})`}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-agri-700">
+                <ChevronDown className="w-5 h-5" />
               </div>
             </div>
+          </div>
 
-            {/* Instant Demo Quick-Access */}
-            <button
-              type="button"
-              onClick={() => handleLogin()}
-              disabled={loading}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-harvest-500 hover:bg-harvest-600 text-harvest-950 font-bold text-xs shadow-xs transition"
-            >
-              <Sparkles className="w-4 h-4 text-harvest-900" />
-              <span>{language === "bn" ? "১-ক্লিকে ডেমো প্রবেশ" : "1-Click Instant Demo Access"}</span>
-            </button>
+          {/* Active Selected Role Card Preview */}
+          <div className={`p-4 rounded-xl border ${currentRoleConfig.borderLight} ${currentRoleConfig.bgLight} transition-all space-y-2.5`}>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className={`w-9 h-9 rounded-lg bg-white shadow-2xs flex items-center justify-center ${currentRoleConfig.color}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-earth-900">
+                    {language === "bn" ? currentRoleConfig.titleBn : currentRoleConfig.titleEn}
+                  </h3>
+                  <p className="text-[11px] text-earth-600">
+                    {language === "bn" ? currentRoleConfig.demoUser.companyBn : currentRoleConfig.demoUser.companyEn}
+                  </p>
+                </div>
+              </div>
+
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-earth-700 border border-earth-200 shadow-2xs shrink-0">
+                {language === "bn" ? currentRoleConfig.badgeBn : currentRoleConfig.badgeEn}
+              </span>
+            </div>
+
+            <p className="text-xs text-earth-700 pt-1 border-t border-earth-200/50">
+              {language === "bn" ? currentRoleConfig.descBn : currentRoleConfig.descEn}
+            </p>
+
+            <div className="text-[11px] text-earth-600 flex items-center justify-between pt-0.5">
+              <span>
+                {language === "bn" ? "প্রোফাইল নাম:" : "Profile Name:"}{" "}
+                <strong className="text-earth-900">{language === "bn" ? currentRoleConfig.demoUser.nameBn : currentRoleConfig.demoUser.nameEn}</strong>
+              </span>
+            </div>
           </div>
 
           {errorMsg && (
-            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+            <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
+          {/* Login Form Credentials */}
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-earth-700 mb-1">
-                  {language === "bn" ? "মোবাইল নম্বর / ইমেইল" : "Phone Number / Email"}
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="w-4 h-4 text-earth-400" />
+            {selectedRole !== "admin" ? (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 mb-1">
+                    {language === "bn" ? "মোবাইল নম্বর / ইউজার আইডি" : "Phone Number / User ID"}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Phone className="w-4 h-4 text-earth-400" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="017XXXXXXXX"
+                      className="w-full pl-9 pr-3 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="017XXXXXXXX"
-                    className="w-full pl-9 pr-3 py-2 text-sm border border-earth-300 rounded-lg focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/30"
-                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-earth-700 mb-1">
+                    {language === "bn" ? "পাসওয়ার্ড / পাসকোড" : "Password / Passcode"}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <KeyRound className="w-4 h-4 text-earth-400" />
+                    </div>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full pl-9 pr-10 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-earth-400 hover:text-earth-600"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
               </div>
-
+            ) : (
               <div>
                 <label className="block text-xs font-semibold text-earth-700 mb-1">
-                  {language === "bn" ? "পাসওয়ার্ড / পাসকোড" : "Password / PIN"}
+                  {language === "bn" ? "অ্যাডমিন সিকিউর পাসকি (Passkey)" : "Admin Secure Passkey"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <KeyRound className="w-4 h-4 text-earth-400" />
+                    <ShieldCheck className="w-4 h-4 text-rose-500" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-9 pr-10 py-2 text-sm border border-earth-300 rounded-lg focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/30"
+                    placeholder="admin2026"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-rose-600 focus:border-rose-600 text-earth-900 bg-earth-50/40"
                   />
                   <button
                     type="button"
@@ -375,45 +446,66 @@ function LoginFormContent() {
                   </button>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-xs text-earth-500">
-                {language === "bn"
-                  ? "💡 মূল্যায়নকারীদের সুবিধার জন্য ডেমো পাসকোড স্বয়ংক্রিয় পূরণ করা আছে।"
-                  : "💡 Demo credentials are pre-configured for instant evaluator access."}
-              </span>
+            {/* Quick Demo Helper Hint */}
+            <p className="text-[11px] text-earth-500">
+              {language === "bn"
+                ? "💡 মূল্যায়নের সুবিধার জন্য নির্বাচিত ভূমিকার ডেমো তথ্য স্বয়ংক্রিয় পূরণ করা আছে।"
+                : "💡 Demo credentials for the selected role are pre-filled for immediate access."}
+            </p>
 
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-agri-800 hover:bg-agri-900 text-white font-bold text-sm shadow-sm transition disabled:opacity-50"
+                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-agri-800 hover:bg-agri-900 text-white font-bold text-sm shadow-sm transition disabled:opacity-50"
               >
-                <span>{loading ? (language === "bn" ? "প্রবেশ করা হচ্ছে..." : "Signing in...") : (language === "bn" ? "লগইন করুন" : "Sign In")}</span>
+                <span>
+                  {loading
+                    ? (language === "bn" ? "প্রবেশ করা হচ্ছে..." : "Signing In...")
+                    : (language === "bn" ? `${currentRoleConfig.titleBn} হিসেবে লগইন` : `Sign In as ${currentRoleConfig.titleEn}`)}
+                </span>
                 <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleLogin()}
+                disabled={loading}
+                title={language === "bn" ? "তাত্ক্ষণিক ডেমো প্রবেশ" : "1-Click Demo Access"}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-harvest-500 hover:bg-harvest-600 text-harvest-950 font-bold text-xs shadow-xs transition"
+              >
+                <Sparkles className="w-4 h-4 text-harvest-900" />
+                <span>{language === "bn" ? "১-ক্লিকে প্রবেশ" : "1-Click Enter"}</span>
               </button>
             </div>
           </form>
         </div>
 
-        {/* Public Visitor Notice & Quick Links */}
+        {/* Public Visitor Return Links */}
         <div className="text-center pt-2 pb-6 space-y-2">
           <p className="text-xs text-earth-600">
             {language === "bn"
-              ? "লগইন না করেও আপনি সাধারণ পরিদর্শক হিসেবে মার্কেটপ্লেস ও লাইভ নিলাম দেখতে পারেন।"
-              : "You can also explore public auctions and marketplace without logging in."}
+              ? "লগইন না করেও সাধারণ পরিদর্শক হিসেবে মূল সাইটের উন্মুক্ত ফিচারগুলো ঘুরে দেখতে পারেন:"
+              : "You can also explore public features as a visitor without signing in:"}
           </p>
-          <div className="flex items-center justify-center gap-4 text-xs font-semibold text-agri-700">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-agri-700">
+            <Link href="/" className="hover:underline">
+              {language === "bn" ? "হোম পেজ" : "Home"}
+            </Link>
+            <span className="text-earth-300">•</span>
             <Link href="/marketplace" className="hover:underline">
-              {language === "bn" ? "→ কৃষি মার্কেটপ্লেস দেখুন" : "→ Explore Marketplace"}
+              {language === "bn" ? "মার্কেটপ্লেস" : "Marketplace"}
             </Link>
             <span className="text-earth-300">•</span>
             <Link href="/auctions" className="hover:underline">
-              {language === "bn" ? "→ লাইভ নিলাম দেখুন" : "→ Watch Live Auctions"}
+              {language === "bn" ? "লাইভ নিলাম" : "Live Auctions"}
             </Link>
             <span className="text-earth-300">•</span>
             <Link href="/market-intelligence" className="hover:underline">
-              {language === "bn" ? "→ বাজার দর দেখুন" : "→ Market Prices"}
+              {language === "bn" ? "বাজার দর" : "Market Prices"}
             </Link>
           </div>
         </div>
@@ -426,7 +518,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#fbfbf9] text-earth-600 text-sm">
+        <div className="min-h-screen flex items-center justify-center bg-[#fcfbf9] text-earth-600 text-sm">
           Loading login portal...
         </div>
       }

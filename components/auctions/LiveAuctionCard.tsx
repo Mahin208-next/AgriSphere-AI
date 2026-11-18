@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Auction, Bid } from "@/types";
 import { useApp } from "@/context/AppContext";
 import { 
@@ -87,8 +88,24 @@ export default function LiveAuctionCard({ auction, onRefresh }: LiveAuctionCardP
     e.preventDefault();
     setFeedback(null);
 
+    if (!currentUser) {
+      setFeedback({
+        type: "error",
+        message: language === "bn" ? "বিড করার আগে অনুগ্রহ করে ক্রেতা হিসেবে লগইন করুন।" : "Please sign in as a Buyer to place a bid."
+      });
+      return;
+    }
+
     if (isFarmerOwner) {
       setFeedback({ type: "error", message: language === "bn" ? "বিক্রেতা হিসেবে নিজের নিলামে বিড করা যাবে না।" : "Sellers are prohibited from bidding on their own listings." });
+      return;
+    }
+
+    if (currentUser.role === "farmer") {
+      setFeedback({
+        type: "error",
+        message: language === "bn" ? "কৃষকরা নিলামে বিড করতে পারবেন না। কেবলমাত্র ক্রেতা বা কারখানা বিড করতে পারেন।" : "Farmers cannot bid on auctions. Only verified buyers can bid."
+      });
       return;
     }
 
@@ -326,48 +343,80 @@ export default function LiveAuctionCard({ auction, onRefresh }: LiveAuctionCardP
 
         {/* Bidding Action Section */}
         {isAuctionLive ? (
-          <form onSubmit={handlePlaceBid} className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-2.5 text-xs font-bold text-earth-400">৳</span>
-                <input
-                  type="number"
-                  min={minRequiredBid}
-                  step={auction.minIncrement}
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(Number(e.target.value))}
-                  disabled={submitting || isFarmerOwner}
-                  className="w-full pl-7 pr-3 py-2 border border-earth-300 rounded-xl text-sm font-bold text-earth-900 focus:outline-none focus:ring-2 focus:ring-agri-500 disabled:bg-earth-100"
-                  placeholder={String(minRequiredBid)}
-                />
+          !currentUser ? (
+            <div className="p-3.5 bg-agri-50/80 rounded-xl border border-agri-200 text-center space-y-2">
+              <div className="text-xs font-bold text-earth-800">
+                {language === "bn" ? "লাইভ নিলামে বিড করতে চান?" : "Want to place a live bid?"}
               </div>
-
-              <button
-                type="submit"
-                disabled={submitting || isFarmerOwner}
-                className="px-4 py-2 bg-agri-700 hover:bg-agri-800 disabled:bg-earth-300 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+              <p className="text-[11px] text-earth-600">
+                {language === "bn"
+                  ? "পাইকারি ক্রেতা বা আড়তদার হিসেবে লগইন করে সরাসরি বিড করুন।"
+                  : "Sign in with your verified buyer account to place real-time bids."}
+              </p>
+              <Link
+                href="/login?redirect=/auctions"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-agri-800 hover:bg-agri-900 text-white text-xs font-bold rounded-lg shadow-sm transition"
               >
                 <Gavel className="w-3.5 h-3.5" />
-                <span>{submitting ? t.common.loading : t.auction.placeBid}</span>
-              </button>
+                <span>{language === "bn" ? "বিড করতে লগইন করুন" : "Sign In as Buyer to Bid"}</span>
+              </Link>
             </div>
-
-            <div className="flex items-center justify-between text-xs text-earth-500">
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isAnonymous}
-                  onChange={(e) => setIsAnonymous(e.target.checked)}
-                  className="rounded text-agri-600 focus:ring-agri-500 w-3.5 h-3.5"
-                />
-                <span>{language === "bn" ? "নাম গোপন রেখে বিড করুন" : "Bid Anonymously"}</span>
-              </label>
-
-              <span className="text-[11px] text-earth-400">
-                {language === "bn" ? `মোট কমিটমেন্ট: ৳${(bidAmount * auction.quantity).toLocaleString()}` : `Total Commitment: BDT ${(bidAmount * auction.quantity).toLocaleString()}`}
-              </span>
+          ) : isFarmerOwner ? (
+            <div className="p-2.5 bg-earth-100/70 rounded-xl text-center text-xs text-earth-700 font-medium">
+              {language === "bn"
+                ? "🌾 আপনি এই ফসলের বিক্রেতা কৃষক। ক্রেতাদের দেওয়া বিড পর্যবেক্ষণ করুন।"
+                : "🌾 You are the owner of this auction. Monitor bids from buyers below."}
             </div>
-          </form>
+          ) : currentUser.role === "farmer" ? (
+            <div className="p-2.5 bg-earth-100/70 rounded-xl text-center text-xs text-earth-600 font-medium">
+              {language === "bn"
+                ? "🌾 কৃষক অ্যাকাউন্ট দিয়ে নিলাম দেখা যাবে। কেবলমাত্র ক্রেতারা বিড করতে পারেন।"
+                : "🌾 Farmers can watch the auction. Only verified buyers can submit bids."}
+            </div>
+          ) : (
+            <form onSubmit={handlePlaceBid} className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-2.5 text-xs font-bold text-earth-400">৳</span>
+                  <input
+                    type="number"
+                    min={minRequiredBid}
+                    step={auction.minIncrement}
+                    value={bidAmount}
+                    onChange={(e) => setBidAmount(Number(e.target.value))}
+                    disabled={submitting}
+                    className="w-full pl-7 pr-3 py-2 border border-earth-300 rounded-xl text-sm font-bold text-earth-900 focus:outline-none focus:ring-2 focus:ring-agri-500 disabled:bg-earth-100"
+                    placeholder={String(minRequiredBid)}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-4 py-2 bg-agri-700 hover:bg-agri-800 disabled:bg-earth-300 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <Gavel className="w-3.5 h-3.5" />
+                  <span>{submitting ? t.common.loading : t.auction.placeBid}</span>
+                </button>
+              </div>
+
+              <div className="flex flex-col min-[400px]:flex-row min-[400px]:items-center justify-between text-xs text-earth-500 gap-1.5">
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isAnonymous}
+                    onChange={(e) => setIsAnonymous(e.target.checked)}
+                    className="rounded text-agri-600 focus:ring-agri-500 w-3.5 h-3.5"
+                  />
+                  <span>{language === "bn" ? "নাম গোপন রেখে বিড করুন" : "Bid Anonymously"}</span>
+                </label>
+
+                <span className="text-[11px] text-earth-500 font-medium truncate">
+                  {language === "bn" ? `মোট: ৳${(bidAmount * auction.quantity).toLocaleString()}` : `Total: BDT ${(bidAmount * auction.quantity).toLocaleString()}`}
+                </span>
+              </div>
+            </form>
+          )
         ) : null}
 
         {/* Farmer Acceptance Button */}

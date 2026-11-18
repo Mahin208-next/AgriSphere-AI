@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { ProcurementRequest, SupplierOffer } from "@/types";
 import { useApp } from "@/context/AppContext";
 import { 
@@ -52,8 +53,25 @@ export default function ProcurementCard({ request, onRefresh }: ProcurementCardP
 
   const handleSubmitOffer = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
     setFeedback(null);
+
+    if (!currentUser) {
+      setFeedback({
+        type: "error",
+        message: language === "bn" ? "প্রস্তাব দেওয়ার আগে অনুগ্রহ করে কৃষক হিসেবে লগইন করুন।" : "Please sign in as a Farmer to submit an offer."
+      });
+      return;
+    }
+
+    if (currentUser.role !== "farmer") {
+      setFeedback({
+        type: "error",
+        message: language === "bn" ? "কেবলমাত্র নিবন্ধিত কৃষকরা সরবরাহ প্রস্তাব দিতে পারেন।" : "Only verified farmers can submit supply offers."
+      });
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
       const res = await fetch(`/api/v1/procurement/${request.id}/offers`, {
@@ -144,7 +162,7 @@ export default function ProcurementCard({ request, onRefresh }: ProcurementCardP
       </div>
 
       {/* Logistics & Budget bar */}
-      <div className="grid grid-cols-2 gap-3 p-3 bg-earth-50 rounded-xl text-xs text-earth-700 mb-4">
+      <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-2.5 sm:gap-3 p-3 bg-earth-50 rounded-xl text-xs text-earth-700 mb-4">
         <div className="flex items-center gap-1.5">
           <MapPin className="w-3.5 h-3.5 text-agri-600 shrink-0" />
           <span className="truncate">{request.deliveryLocation}</span>
@@ -192,15 +210,32 @@ export default function ProcurementCard({ request, onRefresh }: ProcurementCardP
           <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showOffersList ? "rotate-90" : ""}`} />
         </button>
 
-        {!isOwner && !isFulfilled && (
+        {!currentUser ? (
+          <Link
+            href="/login?redirect=/procurement"
+            className="px-3.5 py-1.5 rounded-xl bg-agri-800 hover:bg-agri-900 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+          >
+            <Send className="w-3 h-3" />
+            <span>{language === "bn" ? "প্রস্তাব দিতে লগইন করুন" : "Sign In to Offer"}</span>
+          </Link>
+        ) : !isOwner && !isFulfilled ? (
           <button
-            onClick={() => setShowOfferForm(!showOfferForm)}
+            onClick={() => {
+              if (currentUser.role !== "farmer") {
+                setFeedback({
+                  type: "error",
+                  message: language === "bn" ? "কেবলমাত্র নিবন্ধিত কৃষকরা সরবরাহ প্রস্তাব দিতে পারেন।" : "Only verified farmers can submit supply offers."
+                });
+                return;
+              }
+              setShowOfferForm(!showOfferForm);
+            }}
             className="px-3.5 py-1.5 rounded-xl bg-agri-700 hover:bg-agri-800 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
           >
             <Send className="w-3 h-3" />
             <span>{showOfferForm ? t.common.cancel : t.procurement.submitOffer}</span>
           </button>
-        )}
+        ) : null}
       </div>
 
       {/* Reverse Offer Form for Farmers */}

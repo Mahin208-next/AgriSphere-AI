@@ -160,39 +160,39 @@ export default function FarmerDashboard() {
       )}
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "সক্রিয় ফসল তালিকা" : "Active Listings"}
           </div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {listings.filter((l) => l.farmerId === currentUser?.id).length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "লাইভ নিলামে ফসল" : "Live Auctions"}
           </div>
-          <div className="text-2xl font-black text-agri-700 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-agri-700 mt-1">
             {myAuctions.filter((a) => a.status === "live").length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "কারখানা ও ক্রেতার চাহিদা" : "Matching Demands"}
           </div>
-          <div className="text-2xl font-black text-harvest-600 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-harvest-600 mt-1">
             {procurements.length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "সরাসরি চুক্তি প্রস্তাব" : "Contract Proposals"}
           </div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {contracts.length}
           </div>
         </div>

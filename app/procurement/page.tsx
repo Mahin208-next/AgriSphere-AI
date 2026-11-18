@@ -6,6 +6,7 @@ import { ProcurementRequest } from "@/types";
 import { CROPS_DATA } from "@/lib/data/crops";
 import { Building2, PlusCircle, Filter } from "lucide-react";
 import ProcurementCard from "@/components/procurement/ProcurementCard";
+import { fetchWithCache } from "@/lib/client-cache";
 
 export default function ProcurementPage() {
   const { currentUser, language, t } = useApp();
@@ -15,11 +16,8 @@ export default function ProcurementPage() {
 
   const fetchProcurements = async () => {
     try {
-      const res = await fetch("/api/v1/procurement");
-      if (res.ok) {
-        const data = await res.json();
-        setRequests(data.requests || []);
-      }
+      const data = await fetchWithCache("/api/v1/procurement", undefined, 30000);
+      setRequests(data.requests || []);
     } catch (e) {
       console.error(e);
     } finally {

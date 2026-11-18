@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { MarketPriceRecord } from "@/types";
 import { CROPS_DATA } from "@/lib/data/crops";
+import { fetchWithCache } from "@/lib/client-cache";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -35,11 +36,11 @@ export default function MarketPriceView() {
 
   // Fetch today's prices for selected crop
   useEffect(() => {
+    let isMounted = true;
     const fetchPrices = async () => {
       try {
-        const res = await fetch(`/api/v1/prices?cropId=${selectedCropId}&onlyToday=true`);
-        if (res.ok) {
-          const data = await res.json();
+        const data = await fetchWithCache(`/api/v1/prices?cropId=${selectedCropId}&onlyToday=true`, undefined, 30000);
+        if (isMounted) {
           setPrices(data.prices || []);
         }
       } catch (err) {
@@ -47,25 +48,27 @@ export default function MarketPriceView() {
       }
     };
     fetchPrices();
+    return () => { isMounted = false; };
   }, [selectedCropId]);
 
   // Fetch trend time-series for Recharts
   useEffect(() => {
+    let isMounted = true;
     const fetchTrends = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/v1/prices/trends?cropId=${selectedCropId}&days=${trendDays}`);
-        if (res.ok) {
-          const data = await res.json();
+        const data = await fetchWithCache(`/api/v1/prices/trends?cropId=${selectedCropId}&days=${trendDays}`, undefined, 60000);
+        if (isMounted) {
           setTrendData(data.trendData || []);
         }
       } catch (err) {
         console.error("Error fetching trend data:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     fetchTrends();
+    return () => { isMounted = false; };
   }, [selectedCropId, trendDays]);
 
   const selectedCrop = CROPS_DATA.find((c) => c.id === selectedCropId) || CROPS_DATA[0];
@@ -196,23 +199,23 @@ export default function MarketPriceView() {
         </div>
 
         {/* Recharts Container */}
-        <div className="h-72 w-full">
+        <div className="h-64 sm:h-72 md:h-80 w-full">
           {loading ? (
             <div className="h-full flex items-center justify-center text-sm text-earth-400">
               {t.common.loading}
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+              <LineChart data={trendData} margin={{ top: 10, right: 10, bottom: 5, left: -12 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 11, fill: '#78716c' }} 
+                  tick={{ fontSize: 10, fill: '#78716c' }} 
                   tickFormatter={(val) => val.slice(5)} 
                 />
                 <YAxis 
                   unit="৳" 
-                  tick={{ fontSize: 11, fill: '#78716c' }} 
+                  tick={{ fontSize: 10, fill: '#78716c' }} 
                   domain={['auto', 'auto']}
                 />
                 <Tooltip 
@@ -220,11 +223,11 @@ export default function MarketPriceView() {
                     backgroundColor: '#ffffff', 
                     borderRadius: '12px', 
                     border: '1px solid #e7e5e4',
-                    fontSize: '12px' 
+                    fontSize: '11px' 
                   }}
                   formatter={(val: any) => [`৳${val}/kg`, '']}
                 />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                 <Line 
                   type="monotone" 
                   dataKey="dhakaWholesale" 

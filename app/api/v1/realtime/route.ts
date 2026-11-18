@@ -14,6 +14,15 @@ export async function GET(req: Request) {
     encoder.encode(`event: connected\ndata: ${JSON.stringify({ status: "connected", time: new Date().toISOString() })}\n\n`)
   );
 
+  // Keep-alive heartbeat to prevent idle disconnect loops
+  const pingInterval = setInterval(() => {
+    try {
+      writer.write(encoder.encode(": ping\n\n"));
+    } catch {
+      clearInterval(pingInterval);
+    }
+  }, 20000);
+
   const unsubscribe = db.subscribe((event: DatabaseEvent) => {
     try {
       const payload = `event: ${event.type.toLowerCase()}\ndata: ${JSON.stringify(event)}\n\n`;
@@ -24,6 +33,7 @@ export async function GET(req: Request) {
   });
 
   req.signal.addEventListener("abort", () => {
+    clearInterval(pingInterval);
     unsubscribe();
     writer.close().catch(() => {});
   });

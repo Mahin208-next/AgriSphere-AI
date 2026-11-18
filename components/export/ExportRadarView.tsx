@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useApp } from "@/context/AppContext";
 import { ExportRFQ, ExportQuotation } from "@/types";
 import { 
@@ -16,6 +17,7 @@ import {
   Building,
   Info
 } from "lucide-react";
+import { fetchWithCache, invalidateCache } from "@/lib/client-cache";
 
 export default function ExportRadarView() {
   const { currentUser, language, t } = useApp();
@@ -38,11 +40,8 @@ export default function ExportRadarView() {
 
   const fetchRfqs = async () => {
     try {
-      const res = await fetch("/api/v1/export/rfqs");
-      if (res.ok) {
-        const data = await res.json();
-        setRfqs(data.rfqs || []);
-      }
+      const data = await fetchWithCache("/api/v1/export/rfqs", undefined, 30000);
+      setRfqs(data.rfqs || []);
     } catch (e) {
       console.error("Error fetching RFQs:", e);
     }
@@ -77,6 +76,7 @@ export default function ExportRadarView() {
           message: language === "bn" ? "আন্তর্জাতিক কোটেশন সফলভাবে জমা হয়েছে!" : "Quotation successfully submitted to importer!",
         });
         setSelectedRfq(null);
+        invalidateCache("/api/v1/export/rfqs");
         fetchRfqs();
       } else {
         setFeedback({ type: "error", message: data.error || "Failed to submit quote" });
@@ -114,6 +114,7 @@ export default function ExportRadarView() {
           message: language === "bn" ? "নতুন আন্তর্জাতিক আরএফকিউ প্রকাশিত হয়েছে!" : "International RFQ published successfully!",
         });
         setShowRfqModal(false);
+        invalidateCache("/api/v1/export/rfqs");
         fetchRfqs();
       } else {
         setFeedback({ type: "error", message: data.error });
@@ -198,19 +199,19 @@ export default function ExportRadarView() {
 
               {/* Specs & Requirements */}
               <div className="bg-earth-50 rounded-xl p-3.5 space-y-2 text-xs text-earth-700 mb-4 border border-earth-100">
-                <div className="flex justify-between">
+                <div className="flex flex-col min-[420px]:flex-row min-[420px]:justify-between gap-0.5">
                   <span className="text-earth-500">{language === "bn" ? "প্রয়োজনীয় গ্রেড:" : "Required Grade:"}</span>
                   <span className="font-semibold text-earth-900">{rfq.requiredGrade}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col min-[420px]:flex-row min-[420px]:justify-between gap-0.5">
                   <span className="text-earth-500">{language === "bn" ? "গন্তব্য বন্দর:" : "Destination Port:"}</span>
-                  <span className="font-semibold text-earth-900">{rfq.destinationPort}</span>
+                  <span className="font-semibold text-earth-900 truncate">{rfq.destinationPort}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col min-[420px]:flex-row min-[420px]:justify-between gap-0.5">
                   <span className="text-earth-500">{language === "bn" ? "প্যাকেজিং মান:" : "Packaging Spec:"}</span>
-                  <span className="font-semibold text-earth-900 truncate max-w-[200px]">{rfq.packagingType}</span>
+                  <span className="font-semibold text-earth-900 truncate max-w-full min-[420px]:max-w-[200px]">{rfq.packagingType}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col min-[420px]:flex-row min-[420px]:justify-between gap-0.5">
                   <span className="text-earth-500">{language === "bn" ? "টার্গেট এফওবি মূল্য:" : "Target FOB Price:"}</span>
                   <span className="font-bold text-agri-800">USD ${rfq.maxTargetFobPriceUsd}/kg</span>
                 </div>
@@ -241,13 +242,35 @@ export default function ExportRadarView() {
                 {(rfq as any).quotationCount || 1} {language === "bn" ? "কোটেশন জমা পড়েছে" : "Quotes Submitted"}
               </span>
 
-              <button
-                onClick={() => setSelectedRfq(rfq)}
-                className="px-4 py-2 bg-agri-700 hover:bg-agri-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{t.export.submitQuote}</span>
-              </button>
+              {!currentUser ? (
+                <Link
+                  href="/login?redirect=/export"
+                  className="px-4 py-2 bg-agri-800 hover:bg-agri-900 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{language === "bn" ? "কোটেশন দিতে লগইন" : "Sign In to Quote"}</span>
+                </Link>
+              ) : currentUser.role !== "exporter" && currentUser.role !== "admin" ? (
+                <button
+                  onClick={() =>
+                    setFeedback({
+                      type: "error",
+                      message: language === "bn" ? "কেবলমাত্র অনুমোদিত রপ্তানিকারকরা কোটেশন দিতে পারেন।" : "Only registered exporters can submit quotes."
+                    })
+                  }
+                  className="px-4 py-2 bg-earth-200 text-earth-600 rounded-xl text-xs font-semibold"
+                >
+                  <span>{t.export.submitQuote}</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setSelectedRfq(rfq)}
+                  className="px-4 py-2 bg-agri-700 hover:bg-agri-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{t.export.submitQuote}</span>
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -270,8 +293,8 @@ export default function ExportRadarView() {
 
       {/* Exporter Submit Quote Modal */}
       {selectedRfq && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-earth-200">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto">
             <h3 className="text-base font-bold text-earth-900 mb-1">
               {language === "bn" ? "আন্তর্জাতিক এক্সপোর্টার কোটেশন দাখিল" : "Submit Formal Exporter Quotation"}
             </h3>
@@ -356,8 +379,8 @@ export default function ExportRadarView() {
 
       {/* Importer Create RFQ Modal */}
       {showRfqModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-earth-200">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto">
             <h3 className="text-base font-bold text-earth-900 mb-1">
               {language === "bn" ? "নতুন আন্তর্জাতিক আরএফকিউ প্রকাশ করুন" : "Post International Procurement RFQ"}
             </h3>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { AppProvider } from "@/context/AppContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MessengerAIPopup from "@/components/assistant/MessengerAIPopup";
 
 export const metadata: Metadata = {
   title: "KrishiSetu AI — Connecting Farmers to Every Market",
@@ -54,6 +55,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <MessengerAIPopup />
         </AppProvider>
       </body>
     </html>

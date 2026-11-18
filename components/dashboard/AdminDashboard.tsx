@@ -95,43 +95,43 @@ sweet_pumpkin,Sweet Pumpkin,mkt_shyambazar,Shyambazar Wholesale,Dhaka,35,46,2026
       </div>
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">Total Registered Users</div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">Total Registered Users</div>
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {stats.totalUsers || 0}
           </div>
-          <div className="text-[11px] text-earth-400 mt-0.5">
+          <div className="text-[10px] sm:text-[11px] text-earth-400 mt-0.5 truncate">
             {stats.farmersCount || 0} Farmers • {stats.buyersCount || 0} Buyers
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">Completed Platform Trades</div>
-          <div className="text-2xl font-black text-agri-800 mt-1">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">Completed Platform Trades</div>
+          <div className="text-xl sm:text-2xl font-black text-agri-800 mt-1">
             ৳{(stats.totalTradeVolumeBdt || 0).toLocaleString()}
           </div>
-          <div className="text-[11px] text-earth-400 mt-0.5">
+          <div className="text-[10px] sm:text-[11px] text-earth-400 mt-0.5 truncate">
             {stats.completedOrdersCount || 0} Settled Orders
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">Active Market Operations</div>
-          <div className="text-2xl font-black text-harvest-600 mt-1">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">Active Market Operations</div>
+          <div className="text-xl sm:text-2xl font-black text-harvest-600 mt-1">
             {stats.activeAuctions || 0}
           </div>
-          <div className="text-[11px] text-earth-400 mt-0.5">
+          <div className="text-[10px] sm:text-[11px] text-earth-400 mt-0.5 truncate">
             {stats.activeListings || 0} Listings • {stats.openProcurementRequests || 0} Demands
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">Price Records in Database</div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">Price Records in Database</div>
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {stats.priceRecordsCount || 0}
           </div>
-          <div className="text-[11px] text-agri-700 font-semibold mt-0.5">
+          <div className="text-[10px] sm:text-[11px] text-agri-700 font-semibold mt-0.5">
             DAM BD Synchronized
           </div>
         </div>

@@ -22,7 +22,8 @@ import {
   Truck
 } from "lucide-react";
 import LiveAuctionCard from "@/components/auctions/LiveAuctionCard";
-import NetReturnCalculator from "@/components/market/NetReturnCalculator";
+import AICalculationGuide from "@/components/market/AICalculationGuide";
+import { fetchWithCache } from "@/lib/client-cache";
 
 export default function HomePage() {
   const { language, t } = useApp();
@@ -30,25 +31,25 @@ export default function HomePage() {
   const [todayPrices, setTodayPrices] = useState<MarketPriceRecord[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       try {
-        const [aucRes, prcRes] = await Promise.all([
-          fetch("/api/v1/auctions"),
-          fetch("/api/v1/prices?onlyToday=true"),
+        const [aucData, prcData] = await Promise.all([
+          fetchWithCache<{ auctions: Auction[] }>("/api/v1/auctions"),
+          fetchWithCache<{ prices: MarketPriceRecord[] }>("/api/v1/prices?onlyToday=true"),
         ]);
-        if (aucRes.ok) {
-          const d = await aucRes.json();
-          setAuctions(d.auctions || []);
-        }
-        if (prcRes.ok) {
-          const d = await prcRes.json();
-          setTodayPrices(d.prices || []);
+        if (isMounted) {
+          if (aucData?.auctions) setAuctions(aucData.auctions);
+          if (prcData?.prices) setTodayPrices(prcData.prices);
         }
       } catch (e) {
         console.error(e);
       }
     };
     fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const liveAuctions = auctions.filter((a) => a.status === "live");
@@ -56,13 +57,13 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-agri-950 via-agri-900 to-agri-900 text-white pt-16 pb-20 px-4 sm:px-6">
+      <section className="relative overflow-hidden bg-gradient-to-b from-agri-950 via-agri-900 to-agri-900 text-white pt-12 sm:pt-16 pb-16 sm:pb-20 px-4 sm:px-6">
         {/* Decorative Grid Glow */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]" />
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center max-w-3xl mx-auto space-y-5">
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+          <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-5">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
               {language === "bn" ? (
                 <>
                   প্রতিটি কৃষককে সরাসরি <br />
@@ -81,53 +82,53 @@ export default function HomePage() {
               )}
             </h1>
 
-            <p className="text-sm sm:text-base text-agri-200 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-agri-200 max-w-2xl mx-auto leading-relaxed">
               {language === "bn"
                 ? "কৃষকের লাইভ নিলাম, পাইকারি ক্রেতা ও মিলের ক্রয়চাহিদা, কৃষি বিপণন অধিদপ্তরের (DAM) দৈনিক বাজার দর এবং এআই নিট মুনাফা মডেলের সমন্বয়ে দ্বিমুখী কৃষি ট্রেডিং নেটওয়ার্ক।"
                 : "A unified two-way agricultural trading network featuring farmer live auctions, agro-mill reverse procurements, national market price intelligence, and AI net-return recommendations."}
             </p>
 
             {/* Quick Action CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-3">
               <Link
                 href="/auctions"
-                className="px-6 py-3 rounded-xl bg-harvest-500 hover:bg-harvest-400 text-harvest-950 text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-harvest-950/20"
+                className="px-5 sm:px-6 py-3 rounded-xl bg-harvest-500 hover:bg-harvest-400 text-harvest-950 text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-harvest-950/20"
               >
-                <Gavel className="w-4 h-4" />
+                <Gavel className="w-4 h-4 shrink-0" />
                 <span>{language === "bn" ? "লাইভ নিলাম দেখুন (System A)" : "Explore Live Auctions (System A)"}</span>
               </Link>
 
               <Link
                 href="/procurement"
-                className="px-6 py-3 rounded-xl bg-agri-800 hover:bg-agri-700 text-white text-xs font-bold transition flex items-center gap-2 border border-agri-700 shadow-sm"
+                className="px-5 sm:px-6 py-3 rounded-xl bg-agri-800 hover:bg-agri-700 text-white text-xs font-bold transition flex items-center justify-center gap-2 border border-agri-700 shadow-sm"
               >
-                <Building2 className="w-4 h-4" />
+                <Building2 className="w-4 h-4 shrink-0" />
                 <span>{language === "bn" ? "কারখানা ও পাইকারি চাহিদা (System B)" : "Buyer Demands (System B)"}</span>
               </Link>
 
               <Link
                 href="/market-intelligence"
-                className="px-6 py-3 rounded-xl bg-agri-950/80 hover:bg-agri-900 text-agri-200 text-xs font-bold transition flex items-center gap-2 border border-agri-800"
+                className="px-5 sm:px-6 py-3 rounded-xl bg-agri-950/80 hover:bg-agri-900 text-agri-200 text-xs font-bold transition flex items-center justify-center gap-2 border border-agri-800"
               >
-                <TrendingUp className="w-4 h-4 text-agri-400" />
+                <TrendingUp className="w-4 h-4 text-agri-400 shrink-0" />
                 <span>{language === "bn" ? "জাতীয় বাজার দর ও এআই" : "DAM Price Intelligence"}</span>
               </Link>
             </div>
           </div>
 
           {/* Real-time Ticker: DAM Daily Prices */}
-          <div className="mt-12 bg-agri-900/60 backdrop-blur-md rounded-2xl border border-agri-800 p-4 max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-3 text-xs text-agri-300">
-              <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-agri-200">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-ping" />
-                <span>{language === "bn" ? "আজকের পাইকারি বাজার দর (কৃষি বিপণন অধিদপ্তর - DAMBD)" : "Daily DAM Wholesale Market Benchmark"}</span>
+          <div className="mt-10 sm:mt-12 bg-agri-900/60 backdrop-blur-md rounded-2xl border border-agri-800 p-3.5 sm:p-4 max-w-5xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-3 text-xs text-agri-300">
+              <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-agri-200 text-[11px] sm:text-xs">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-ping shrink-0" />
+                <span className="truncate">{language === "bn" ? "আজকের পাইকারি বাজার দর (কৃষি বিপণন অধিদপ্তর - DAMBD)" : "Daily DAM Wholesale Market Benchmark"}</span>
               </div>
-              <span className="text-[11px] font-mono text-agri-400">
+              <span className="text-[10px] sm:text-[11px] font-mono text-agri-400">
                 Live Data Feeds
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
               {todayPrices.slice(0, 4).map((p) => (
                 <div key={p.id} className="bg-agri-950/60 rounded-xl p-3 border border-agri-800/80">
                   <div className="text-[11px] text-agri-300 truncate">
@@ -294,19 +295,19 @@ export default function HomePage() {
 
         {/* AI Net-Return Engine Preview */}
         <section>
-          <NetReturnCalculator />
+          <AICalculationGuide />
         </section>
 
         {/* Global Opportunity Radar Intro */}
-        <section className="bg-gradient-to-r from-earth-900 to-agri-950 text-white rounded-3xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
+        <section className="bg-gradient-to-r from-earth-900 to-agri-950 text-white rounded-3xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
           <div className="max-w-2xl relative z-10 space-y-4">
             <span className="text-xs font-bold px-3 py-1 rounded-full bg-harvest-500 text-harvest-950 uppercase tracking-wider">
               {t.export.title}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold leading-snug">
               {language === "bn" ? "বাংলাদেশি কৃষিপণ্যের আন্তর্জাতিক রপ্তানি সুযোগ" : "Access Global Agricultural Export Markets"}
             </h2>
-            <p className="text-xs text-earth-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-earth-300 leading-relaxed">
               {language === "bn"
                 ? "দুবাই, সৌদি আরব, যুক্তরাজ্য ও ইউরোপের আন্তর্জাতিক আমদানিকারকদের কাঁচা মরিচ, শসা, মিষ্টি কুমড়া ও তাজা আমের সরাসরি আরএফকিউ (RFQ) চাহিদা।"
                 : "Discover direct importer RFQs from the UAE, Saudi Arabia, UK, and European grocers seeking verified Bangladeshi fresh produce."}
@@ -314,40 +315,13 @@ export default function HomePage() {
             <div className="pt-2">
               <Link
                 href="/export"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-agri-600 hover:bg-agri-500 text-white text-xs font-bold transition shadow-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-agri-600 hover:bg-agri-500 text-white text-xs font-bold transition shadow-sm"
               >
                 <Globe2 className="w-4 h-4" />
                 <span>{language === "bn" ? "রপ্তানি সুযোগ ও সনদ যাচাই" : "Explore International RFQs"}</span>
               </Link>
             </div>
           </div>
-        </section>
-
-        {/* Bangla AI Assistant Promo */}
-        <section className="bg-agri-50 rounded-3xl p-8 border border-agri-200 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-agri-700 text-harvest-300 flex items-center justify-center shadow-md shrink-0">
-              <Bot className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-agri-950">
-                {language === "bn" ? "KrishiSetu AI বাংলা কৃষি সহকারী" : "KrishiSetu AI Market Assistant"}
-              </h3>
-              <p className="text-xs text-agri-800 mt-1">
-                {language === "bn"
-                  ? "বাংলা, ইংরেজি বা বাংলিশে সরাসরি প্রশ্ন করুন। কৃষি বিপণন অধিদপ্তরের তথ্য ও লাইভ প্ল্যাটফর্ম ডেটা থেকে তাৎক্ষণিক সিদ্ধান্ত সহায়তা পাবেন।"
-                  : "Ask questions naturally in Bangla or English grounded in verified market intelligence."}
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/assistant"
-            className="px-5 py-2.5 bg-agri-800 hover:bg-agri-900 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm shrink-0"
-          >
-            <span>{language === "bn" ? "এআই সহকারীর সাথে কথা বলুন" : "Chat with AI Assistant"}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </section>
       </div>
     </div>

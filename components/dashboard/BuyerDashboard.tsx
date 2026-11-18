@@ -134,39 +134,39 @@ export default function BuyerDashboard() {
       </div>
 
       {/* KPI Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "আমার ক্রয়চাহিদা" : "My Demands"}
           </div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {myProcurements.length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "লাইভ নিলামে সুযোগ" : "Live Bidding Opportunities"}
           </div>
-          <div className="text-2xl font-black text-agri-700 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-agri-700 mt-1">
             {auctions.filter((a) => a.status === "live").length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "নিশ্চিতকৃত অর্ডার" : "Completed Orders"}
           </div>
-          <div className="text-2xl font-black text-earth-900 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
             {orders.length}
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-earth-200 shadow-2xs">
-          <div className="text-xs text-earth-500 font-medium">
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-earth-200 shadow-2xs">
+          <div className="text-[11px] sm:text-xs text-earth-500 font-medium">
             {language === "bn" ? "মোট ক্রয়মূল্য (টাকা)" : "Total Sourced (BDT)"}
           </div>
-          <div className="text-2xl font-black text-agri-800 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-agri-800 mt-1">
             ৳{totalPurchaseBdt.toLocaleString()}
           </div>
         </div>
@@ -224,9 +224,9 @@ export default function BuyerDashboard() {
 
       {/* Post Procurement Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-earth-200 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-earth-900 mb-1">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto">
+            <h3 className="text-base sm:text-lg font-bold text-earth-900 mb-1">
               {t.procurement.postRequest}
             </h3>
             <p className="text-xs text-earth-500 mb-4">

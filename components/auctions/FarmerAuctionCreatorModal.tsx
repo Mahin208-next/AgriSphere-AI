@@ -205,8 +205,8 @@ export default function FarmerAuctionCreatorModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2.5 sm:p-5 overflow-y-auto">
+      <div className="bg-white rounded-3xl max-w-2xl w-full p-4 sm:p-6 md:p-7 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
         
         {/* Close Button */}
         <button
@@ -214,30 +214,30 @@ export default function FarmerAuctionCreatorModal({
             stopCamera();
             onClose();
           }}
-          className="absolute top-5 right-5 p-2 rounded-full text-earth-400 hover:text-earth-700 hover:bg-earth-100 transition"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-earth-400 hover:text-earth-700 hover:bg-earth-100 transition z-10"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-start gap-3.5 mb-5 pr-10">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-agri-800 to-agri-600 flex items-center justify-center text-white shadow-md shadow-agri-950/20 shrink-0">
-            <Gavel className="w-6 h-6 text-harvest-300" />
+        <div className="flex items-start gap-3 sm:gap-3.5 mb-5 pr-8 sm:pr-10">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-agri-800 to-agri-600 flex items-center justify-center text-white shadow-md shadow-agri-950/20 shrink-0">
+            <Gavel className="w-5 h-5 sm:w-6 sm:h-6 text-harvest-300" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-agri-100 text-agri-800 border border-agri-200">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-agri-100 text-agri-800 border border-agri-200">
                 {language === "bn" ? "কৃষকের নিজস্ব নিলাম প্যানেল" : "Farmer Direct Auction Launch"}
               </span>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 animate-pulse flex items-center gap-1">
+              <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 animate-pulse flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-red-600" />
                 System A
               </span>
             </div>
-            <h2 className="text-xl font-black text-earth-900 mt-1">
+            <h2 className="text-lg sm:text-xl font-black text-earth-900 mt-1 leading-snug">
               {language === "bn" ? "ফসল সরাসরি লাইভ নিলামে তুলুন" : "Put Crop Up for Live Auction"}
             </h2>
-            <p className="text-xs text-earth-500 mt-0.5">
+            <p className="text-xs text-earth-500 mt-0.5 leading-relaxed">
               {language === "bn"
                 ? "নিজের পণ্য নিজেই ছবি, ভিডিও বা লাইভে এসে নিলামে ডাক তুলুন। মধ্যস্বত্বভোগী ছাড়া সর্বোচ্চ দর পান।"
                 : "Upload real crop photos, field video, or go live to invite competitive bids from verified buyers."}
@@ -268,7 +268,7 @@ export default function FarmerAuctionCreatorModal({
             </div>
 
             {/* Media Mode Tabs */}
-            <div className="grid grid-cols-3 gap-2 mb-3.5">
+            <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-2 mb-3.5">
               <button
                 type="button"
                 onClick={() => {

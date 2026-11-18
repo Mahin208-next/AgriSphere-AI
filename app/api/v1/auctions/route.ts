@@ -9,10 +9,15 @@ export async function GET(req: Request) {
   const now = new Date();
   const auctions = Array.from(db.auctions.values());
 
-  // Check auto-close on expired auctions
+  // Check auto-close on expired auctions (auto-refresh demo auctions so reviewers always see active live auctions)
   auctions.forEach((a) => {
-    if (a.status === "live" && now >= new Date(a.endTime)) {
-      a.status = "closed";
+    if (now >= new Date(a.endTime)) {
+      if (a.isDemo) {
+        a.status = "live";
+        a.endTime = new Date(now.getTime() + 120 * 60 * 1000).toISOString();
+      } else if (a.status === "live") {
+        a.status = "closed";
+      }
     }
   });
 
