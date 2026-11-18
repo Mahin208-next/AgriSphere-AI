@@ -95,8 +95,7 @@ if (fs.existsSync(frontendDistPath)) {
 app.use(errorHandler);
 
 const server = app.listen(config.port, () => {
-  console.log(`🚀 AgriSphere Unified Platform running on port ${config.port}`);
-  console.log(`🌐 Full Application available at http://localhost:${config.port}`);
+  console.log(`🚀 KrishiSetu AI Backend running on port ${config.port}`);
   console.log(`📡 Healthcheck available at http://localhost:${config.port}/health`);
   console.log(`🌾 API endpoints mounted under http://localhost:${config.port}/api/v1/`);
 });

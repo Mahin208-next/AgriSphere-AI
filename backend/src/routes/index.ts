@@ -1,6 +1,10 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes";
 import auctionRoutes from "./auction.routes";
+import listingRoutes from "./listing.routes";
+import alertRoutes from "./alert.routes";
+import contractRoutes from "./contract.routes";
+import orderRoutes from "./order.routes";
 import procurementRoutes from "./procurement.routes";
 import priceRoutes from "./price.routes";
 import recommendationRoutes from "./recommendation.routes";
@@ -13,6 +17,10 @@ const apiRouter = Router();
 
 apiRouter.use("/auth", authRoutes);
 apiRouter.use("/auctions", auctionRoutes);
+apiRouter.use("/listings", listingRoutes);
+apiRouter.use("/alerts", alertRoutes);
+apiRouter.use("/contracts", contractRoutes);
+apiRouter.use("/orders", orderRoutes);
 apiRouter.use("/procurement", procurementRoutes);
 apiRouter.use("/prices", priceRoutes);
 apiRouter.use("/recommendations", recommendationRoutes);

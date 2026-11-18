@@ -23,7 +23,7 @@ export class AuthController {
 
       if (body.action === "register") {
         const validated = registerSchema.parse(body);
-        const user = authService.register(validated);
+        const user = authService.register(validated as any);
         return res.json({ success: true, user });
       }
 

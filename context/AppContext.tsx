@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, UserRole } from "@/types";
 import { Language, TRANSLATIONS } from "@/lib/i18n";
+import { getApiUrl } from "@/lib/api";
 
 interface AppContextType {
   currentUser: User | null;
@@ -47,7 +48,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let eventSource: EventSource | null = null;
     try {
-      eventSource = new EventSource("/api/v1/realtime");
+      eventSource = new EventSource(getApiUrl("/api/v1/realtime"));
       eventSource.onmessage = (event) => {
         try {
           const parsed = JSON.parse(event.data);

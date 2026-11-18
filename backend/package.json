@@ -1,13 +1,14 @@
 {
-  "name": "agrisphere-backend",
+  "name": "krishisetu-ai-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "AgriSphere MarketLink AI - Express & Prisma Backend",
+  "description": "KrishiSetu AI - Standalone Express & Prisma REST API",
   "main": "server.ts",
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "tsx server.ts",
+    "start:dist": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push"
   },
