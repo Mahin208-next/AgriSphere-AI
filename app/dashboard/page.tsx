@@ -45,7 +45,7 @@ export default function DashboardPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-earth-100 text-earth-700">
               {language === "bn" ? "প্রবেশাধিকার সংরক্ষিত" : "Role Protected Portal"}
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-earth-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-earth-900 leading-normal">
               {language === "bn" ? "ড্যাশবোর্ড দেখতে লগইন করুন" : "Please Sign In to Access Dashboard"}
             </h1>
             <p className="text-sm text-earth-600">

@@ -281,7 +281,7 @@ function LoginFormContent() {
             />
           </Link>
           <div>
-            <h1 className="text-xl sm:text-3xl font-extrabold text-earth-900 tracking-tight leading-snug">
+            <h1 className="text-xl sm:text-3xl font-extrabold text-earth-900 leading-normal">
               {language === "bn" ? "লগইন পোর্টাল" : "Sign In to Your Account"}
             </h1>
             <p className="text-earth-600 text-xs sm:text-sm mt-1">

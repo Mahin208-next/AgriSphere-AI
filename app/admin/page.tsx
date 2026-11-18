@@ -107,7 +107,7 @@ export default function AdminPage() {
             <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-amber-500/10 text-amber-400 border border-amber-500/30 mb-2">
               🔒 Super Administrator Gateway
             </span>
-            <h1 className="text-2xl font-extrabold tracking-tight text-white">
+            <h1 className="text-2xl font-extrabold leading-normal text-white">
               {language === "bn" ? "প্ল্যাটফর্ম অ্যাডমিন সিকিউরিটি গেটওয়ে" : "Platform Administrator Gateway"}
             </h1>
             <p className="text-xs text-slate-400 mt-1">

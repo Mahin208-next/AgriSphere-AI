@@ -25,7 +25,7 @@ export default function AICalculationGuide() {
             <span>{language === "bn" ? "এআই নিট মুনাফা ক্যালকুলেশন" : "AI Net-Return Arbitrage Engine"}</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-normal">
             {language === "bn"
               ? "এআই দিয়ে কীভাবে নিট মুনাফা ও পরিবহন খরচ হিসাব করবেন?"
               : "How to Calculate Your Net Profit & Transport Costs Using AI"}

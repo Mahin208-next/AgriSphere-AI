@@ -321,7 +321,7 @@ export default function MarketplacePage() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-black text-earth-900 leading-snug">
+                  <h3 className="text-lg font-black text-earth-900 leading-normal">
                     {language === "bn" ? item.cropNameBn : item.cropNameEn}
                   </h3>
                   {item.variety && (

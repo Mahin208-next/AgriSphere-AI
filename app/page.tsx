@@ -63,10 +63,10 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-5">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.35] sm:leading-[1.4] md:leading-[1.45] tracking-normal">
               {language === "bn" ? (
                 <>
-                  প্রতিটি কৃষককে সরাসরি <br />
+                  <span className="block pb-1.5 sm:pb-2.5">প্রতিটি কৃষককে সরাসরি</span>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-harvest-300 via-harvest-400 to-agri-300">
                     প্রতিটি বাজারের সাথে
                   </span>{" "}
@@ -74,7 +74,7 @@ export default function HomePage() {
                 </>
               ) : (
                 <>
-                  Connecting Every Farmer <br />
+                  <span className="block pb-1.5 sm:pb-2.5">Connecting Every Farmer</span>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-harvest-300 via-harvest-400 to-agri-300">
                     To Every Market
                   </span>
@@ -304,7 +304,7 @@ export default function HomePage() {
             <span className="text-xs font-bold px-3 py-1 rounded-full bg-harvest-500 text-harvest-950 uppercase tracking-wider">
               {t.export.title}
             </span>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold leading-snug">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold leading-normal">
               {language === "bn" ? "বাংলাদেশি কৃষিপণ্যের আন্তর্জাতিক রপ্তানি সুযোগ" : "Access Global Agricultural Export Markets"}
             </h2>
             <p className="text-xs sm:text-sm text-earth-300 leading-relaxed">

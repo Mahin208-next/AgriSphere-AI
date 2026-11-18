@@ -11,7 +11,15 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: normal;
 }
+
+/* Bengali typography & anti-overlap optimization */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {

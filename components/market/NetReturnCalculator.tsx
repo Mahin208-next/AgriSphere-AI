@@ -178,7 +178,7 @@ export default function NetReturnCalculator() {
                   </div>
 
                   {/* Market Title */}
-                  <h3 className="text-base font-bold text-earth-900 leading-snug">
+                  <h3 className="text-base font-bold text-earth-900 leading-normal">
                     {language === "bn" ? rec.marketNameBn : rec.marketName}
                   </h3>
                   <p className="text-xs text-earth-500 mt-0.5">

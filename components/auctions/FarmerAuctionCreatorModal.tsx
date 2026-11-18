@@ -234,7 +234,7 @@ export default function FarmerAuctionCreatorModal({
                 System A
               </span>
             </div>
-            <h2 className="text-lg sm:text-xl font-black text-earth-900 mt-1 leading-snug">
+            <h2 className="text-lg sm:text-xl font-black text-earth-900 mt-1 leading-normal">
               {language === "bn" ? "ফসল সরাসরি লাইভ নিলামে তুলুন" : "Put Crop Up for Live Auction"}
             </h2>
             <p className="text-xs text-earth-500 mt-0.5 leading-relaxed">

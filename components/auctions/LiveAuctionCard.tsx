@@ -259,7 +259,7 @@ export default function LiveAuctionCard({ auction, onRefresh }: LiveAuctionCardP
         {/* Title & Specs */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div>
-            <h3 className="text-lg font-bold text-earth-900 leading-snug">
+            <h3 className="text-lg font-bold text-earth-900 leading-normal">
               {language === "bn" ? auction.cropNameBn : auction.cropNameEn}
             </h3>
             <p className="text-xs text-earth-500 mt-0.5">
