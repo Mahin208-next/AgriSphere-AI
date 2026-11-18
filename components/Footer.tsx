@@ -114,11 +114,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-earth-800 flex flex-col sm:flex-row items-center justify-between text-xs text-earth-500 gap-2">
+        <div className="pt-6 border-t border-earth-800 text-center text-xs text-earth-500">
           <p>© 2026 KrishiSetu AI — Connecting Farmers to Every Market.</p>
-          <p className="flex items-center gap-1">
-            <span>Powered by Next.js, Tailwind CSS & Department of Agricultural Marketing (DAM) Open Records</span>
-          </p>
         </div>
       </div>
     </footer>
