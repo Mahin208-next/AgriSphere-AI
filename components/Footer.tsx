@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useApp } from "@/context/AppContext";
-import { Sprout, ShieldCheck, HeartHandshake, FileText, CheckCircle2 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export default function Footer() {
   const { language, t } = useApp();
@@ -11,9 +11,9 @@ export default function Footer() {
   return (
     <footer className="bg-earth-900 text-earth-300 pt-12 pb-8 border-t border-earth-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Brand Info */}
-          <div className="md:col-span-1 space-y-3">
+          <div className="space-y-3">
             <div className="flex items-center gap-2">
               <img
                 src="/logo.png"
@@ -60,31 +60,6 @@ export default function Footer() {
                 <Link href="/export" className="hover:text-agri-400 transition">
                   {language === "bn" ? "৫. গ্লোবাল এক্সপোর্ট রাডার" : "5. Global Export Radar"}
                 </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Target Crops & Coverage */}
-          <div>
-            <h4 className="text-white text-xs font-bold uppercase tracking-wider mb-3">
-              {language === "bn" ? "প্রাথমিক কাভার্ড ফসল" : "Initial Priority Crops"}
-            </h4>
-            <ul className="space-y-2 text-xs text-earth-400">
-              <li className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-agri-500" />
-                <span>{language === "bn" ? "কাঁচা মরিচ (Green Chilli)" : "Green Chilli (কাঁচা মরিচ)"}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-agri-500" />
-                <span>{language === "bn" ? "শসা (Cucumber)" : "Cucumber (শসা)"}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-agri-500" />
-                <span>{language === "bn" ? "মিষ্টি কুমড়া (Sweet Pumpkin)" : "Sweet Pumpkin (মিষ্টি কুমড়া)"}</span>
-              </li>
-              <li className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-agri-500" />
-                <span>{language === "bn" ? "টমেটো ও আলু (Tomato & Potato)" : "Tomato & Potato (টমেটো ও আলু)"}</span>
               </li>
             </ul>
           </div>
