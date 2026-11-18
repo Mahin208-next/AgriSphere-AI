@@ -21,7 +21,11 @@ import {
   Truck, 
   AlertCircle,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Scale,
+  Layers,
+  Sprout,
+  DollarSign
 } from "lucide-react";
 import { fetchWithCache, invalidateCache } from "@/lib/client-cache";
 
@@ -37,11 +41,15 @@ export default function MarketplacePage() {
   // Post Crop Modal State
   const [showPostModal, setShowPostModal] = useState(false);
   const [postCropId, setPostCropId] = useState("green_chilli");
+  const [isCustomCrop, setIsCustomCrop] = useState(false);
+  const [customCropNameBn, setCustomCropNameBn] = useState("");
+  const [customCropNameEn, setCustomCropNameEn] = useState("");
+  const [customCropImage, setCustomCropImage] = useState("");
   const [postVariety, setPostVariety] = useState("বিন্দু জাতের বাছাইকৃত কাঁচা মরিচ");
-  const [postQuantity, setPostQuantity] = useState(1000);
+  const [postQuantity, setPostQuantity] = useState<string>("1000");
   const [postUnit, setPostUnit] = useState<"kg" | "mon" | "tonne">("kg");
   const [postGrade, setPostGrade] = useState<"Grade A" | "Grade B" | "Standard">("Grade A");
-  const [postPrice, setPostPrice] = useState(140);
+  const [postPrice, setPostPrice] = useState<string>("140");
   const [postDistrict, setPostDistrict] = useState(currentUser?.district || "Bogura");
   const [postUpazila, setPostUpazila] = useState(currentUser?.upazila || "Sadar");
   const [postPhone, setPostPhone] = useState(currentUser?.phone || "+880 1711-234567");
@@ -51,7 +59,7 @@ export default function MarketplacePage() {
 
   // Buy Now Modal State
   const [buyingItem, setBuyingItem] = useState<ProductListing | null>(null);
-  const [buyQuantity, setBuyQuantity] = useState<number>(100);
+  const [buyQuantity, setBuyQuantity] = useState<string>("100");
   const [buyDistrict, setBuyDistrict] = useState<string>(currentUser?.district || "Dhaka");
   const [buyAddress, setBuyAddress] = useState<string>("কারওয়ান বাজার মোকাম / তেজগাঁও ওয়্যারহাউজ");
   const [buySubmitting, setBuySubmitting] = useState(false);
@@ -90,25 +98,43 @@ export default function MarketplacePage() {
     setPostSubmitting(true);
     setPostSuccess(null);
 
-    const cropObj = CROPS_DATA.find((c) => c.id === postCropId) || CROPS_DATA[0];
+    const qtyNumber = Number(postQuantity) || 1;
+    const priceNumber = Number(postPrice) || 1;
+
+    let finalCropNameBn = "";
+    let finalCropNameEn = "";
+    let finalImage = "";
+
+    if (isCustomCrop || postCropId === "custom") {
+      finalCropNameBn = customCropNameBn.trim() || "কৃষকের নিজস্ব ফসল";
+      finalCropNameEn = customCropNameEn.trim() || "Farmer Custom Harvest";
+      finalImage = customCropImage.trim() || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80";
+    } else {
+      const cropObj = CROPS_DATA.find((c) => c.id === postCropId) || CROPS_DATA[0];
+      finalCropNameBn = cropObj.nameBn;
+      finalCropNameEn = cropObj.nameEn;
+      finalImage = cropObj.image;
+    }
 
     try {
       const res = await fetch("/api/v1/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cropId: postCropId,
+          cropId: isCustomCrop ? "custom" : postCropId,
+          customCropNameBn: finalCropNameBn,
+          customCropNameEn: finalCropNameEn,
           variety: postVariety,
-          quantity: postQuantity,
+          quantity: qtyNumber,
           unit: postUnit,
           grade: postGrade,
-          expectedPrice: postPrice,
-          startingPrice: postPrice,
+          expectedPrice: priceNumber,
+          startingPrice: priceNumber,
           district: postDistrict,
           upazila: postUpazila,
           description: postNotes,
           isAuction: false, // Pure Direct Sale
-          images: [cropObj.image],
+          images: [finalImage],
         }),
       });
 
@@ -140,7 +166,7 @@ export default function MarketplacePage() {
       return;
     }
     setBuyingItem(item);
-    setBuyQuantity(Math.min(100, item.quantity));
+    setBuyQuantity(String(Math.min(100, item.quantity)));
     setOrderSuccess(null);
     setOrderError(null);
   };
@@ -152,13 +178,15 @@ export default function MarketplacePage() {
     setBuySubmitting(true);
     setOrderError(null);
 
+    const qty = Number(buyQuantity) || 1;
+
     try {
       const res = await fetch("/api/v1/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           listingId: buyingItem.id,
-          quantity: buyQuantity,
+          quantity: qty,
           deliveryDistrict: buyDistrict,
           notes: buyAddress,
         }),
@@ -390,10 +418,10 @@ export default function MarketplacePage() {
         </div>
       )}
 
-      {/* MODAL 1: POST CROP FOR DIRECT SALE */}
+      {/* MODAL 1: POST CROP FOR DIRECT SALE (ORGANIZED & CUSTOM CROP SUPPORT) */}
       {showPostModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border border-earth-200 max-h-[94vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setShowPostModal(false)}
               className="absolute top-5 right-5 p-2 rounded-full text-earth-400 hover:text-earth-700 hover:bg-earth-100 transition"
@@ -401,21 +429,22 @@ export default function MarketplacePage() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-start gap-3.5 mb-5 pr-8">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+            {/* Modal Header */}
+            <div className="flex items-start gap-3.5 mb-6 pr-8 border-b border-earth-100 pb-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-xs">
                 <ShoppingBag className="w-6 h-6 text-emerald-700" />
               </div>
               <div>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">
-                  {language === "bn" ? "কৃষি বাজার সরাসরি বিক্রয়" : "Krishi Bazar Direct Listing"}
+                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">
+                  {language === "bn" ? "কৃষি বাজার সরাসরি বিক্রয়" : "Direct Sale Portal"}
                 </span>
-                <h2 className="text-xl font-black text-earth-900 mt-1">
+                <h2 className="text-xl sm:text-2xl font-black text-earth-900 mt-1">
                   {language === "bn" ? "সরাসরি বিক্রির জন্য ফসল পোস্ট করুন" : "Post Harvest for Direct Purchase"}
                 </h2>
                 <p className="text-xs text-earth-500 mt-0.5">
                   {language === "bn"
-                    ? "কোনো নিলাম নয়; নির্ধারিত পাইকারি মূল্যে সারা দেশের ক্রেতাদের কাছে বিক্রি করুন।"
-                    : "Sell at a fixed price to wholesalers, mills, and supermarkets nationwide."}
+                    ? "কোনো নিলাম নয়; নিজের নির্ধারিত পাইকারি মূল্যে সারা দেশের পাইকারি ক্রেতা ও মিল মালিকদের কাছে সরাসরি বিক্রি করুন।"
+                    : "Sell at your own fixed price directly to wholesalers, factories, and retailers nationwide."}
                 </p>
               </div>
             </div>
@@ -427,158 +456,304 @@ export default function MarketplacePage() {
               </div>
             )}
 
-            <form onSubmit={handlePostCrop} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "ফসলের ধরন:" : "Crop Commodity:"}
-                  </label>
-                  <select
-                    value={postCropId}
-                    onChange={(e) => {
-                      setPostCropId(e.target.value);
-                      const c = CROPS_DATA.find((item) => item.id === e.target.value);
-                      if (c) setPostVariety(`${c.nameBn} - বাছাইকৃত গ্রেড`);
-                    }}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900"
-                  >
-                    {CROPS_DATA.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.nameEn} ({c.nameBn})
-                      </option>
-                    ))}
-                  </select>
+            <form onSubmit={handlePostCrop} className="space-y-5 text-xs">
+              {/* SECTION 1: CROP & VARIETY (CUSTOM CROP ALLOWED) */}
+              <div className="bg-earth-50/70 p-4 rounded-2xl border border-earth-200/80 space-y-3.5">
+                <div className="flex items-center gap-2 text-earth-800 font-bold text-xs uppercase tracking-wide">
+                  <Sprout className="w-4 h-4 text-emerald-700" />
+                  <span>{language === "bn" ? "১. ফসলের নাম ও জাত নির্বাচন" : "1. Crop Commodity & Variety"}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "ফসলের ধরন / তালিকা:" : "Crop Commodity:"}
+                    </label>
+                    <select
+                      value={postCropId}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "custom") {
+                          setIsCustomCrop(true);
+                          setPostCropId("custom");
+                          setPostVariety("");
+                        } else {
+                          setIsCustomCrop(false);
+                          setPostCropId(val);
+                          const c = CROPS_DATA.find((item) => item.id === val);
+                          if (c) setPostVariety(`${c.nameBn} - বাছাইকৃত গ্রেড`);
+                        }
+                      }}
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                    >
+                      <optgroup label={language === "bn" ? "জনপ্রিয় ফসল ও ফলসমূহ" : "Popular Produce"}>
+                        {CROPS_DATA.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.nameBn} ({c.nameEn})
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label={language === "bn" ? "কাস্টম ফসল" : "Custom Produce"}>
+                        <option value="custom" className="text-emerald-700 font-bold">
+                          {language === "bn" ? "➕ অন্য ফসল বা ফল (নিজের মতো লিখুন)" : "➕ Add Custom Crop / Fruit"}
+                        </option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "জাত / ভ্যারাইটি বিবরণ:" : "Variety / Spec:"}
+                    </label>
+                    <input
+                      type="text"
+                      value={postVariety}
+                      onChange={(e) => setPostVariety(e.target.value)}
+                      placeholder={language === "bn" ? "যেমন: বিন্দু, হিমসাগর, হাইব্রিড, ইত্যাদি" : "e.g., Himsagar, Hybrid"}
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-medium text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* DYNAMIC CUSTOM CROP INPUT BOX */}
+                {(isCustomCrop || postCropId === "custom") && (
+                  <div className="p-3.5 bg-amber-50/70 border border-amber-300 rounded-xl space-y-3 animate-in fade-in duration-200">
+                    <div className="flex items-center gap-1.5 text-amber-900 font-bold text-xs">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                      <span>{language === "bn" ? "নতুন ফসলের বিবরণ (কৃষকের নিজস্ব ফসল):" : "Custom Crop Details:"}</span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-earth-700 font-semibold mb-1">
+                          {language === "bn" ? "ফসলের বাংলা নাম লিখুন *" : "Crop Name (Bangla) *"}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={customCropNameBn}
+                          onChange={(e) => setCustomCropNameBn(e.target.value)}
+                          placeholder="যেমন: লিচু, আম, ড্রাগন ফল, পেয়ারা, তরমুজ..."
+                          className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-earth-900 font-bold"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-earth-700 font-semibold mb-1">
+                          {language === "bn" ? "ইংরেজি নাম (ঐচ্ছিক):" : "Crop Name (English):"}
+                        </label>
+                        <input
+                          type="text"
+                          value={customCropNameEn}
+                          onChange={(e) => setCustomCropNameEn(e.target.value)}
+                          placeholder="e.g. Litchi, Dragon Fruit"
+                          className="w-full px-3 py-2 bg-white border border-earth-300 rounded-lg text-earth-900"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* SECTION 2: QUANTITY, WEIGHT & PRICE SETTING (EDITABLE NUMBERS & LIVE TOTAL) */}
+              <div className="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-200/80 space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-950 font-bold text-xs uppercase tracking-wide">
+                    <Scale className="w-4 h-4 text-emerald-700" />
+                    <span>{language === "bn" ? "২. বিক্রয়যোগ্য পরিমাণ, ওজন ও মূল্য নির্ধারণ" : "2. Quantity, Weight & Pricing"}</span>
+                  </div>
+                  <span className="text-[11px] text-emerald-700 font-medium">
+                    {language === "bn" ? "সংখ্যা টাইপ বা এডিট করুন" : "Freely editable numbers"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                  {/* Quantity input */}
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "বিক্রয়যোগ্য পরিমাণ (ওজন):" : "Total Quantity:"}
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      min={1}
+                      required
+                      value={postQuantity}
+                      onChange={(e) => setPostQuantity(e.target.value)}
+                      placeholder="1000"
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-black text-base text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                    />
+                    {/* Quick increment pills */}
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      {[100, 500, 1000].map((delta) => (
+                        <button
+                          key={delta}
+                          type="button"
+                          onClick={() => setPostQuantity(String((Number(postQuantity) || 0) + delta))}
+                          className="px-2 py-0.5 rounded bg-earth-100 hover:bg-earth-200 text-earth-700 text-[10px] font-bold transition"
+                        >
+                          +{delta}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Unit Selector */}
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "পরিমাপের একক (Unit):" : "Unit of Measure:"}
+                    </label>
+                    <select
+                      value={postUnit}
+                      onChange={(e) => setPostUnit(e.target.value as any)}
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                    >
+                      <option value="kg">কেজি (kg)</option>
+                      <option value="mon">মণ (Mon - 40 kg)</option>
+                      <option value="tonne">টন (Tonne)</option>
+                    </select>
+                  </div>
+
+                  {/* Price input */}
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "নির্ধারিত বিক্রয় মূল্য (টাকা/একক):" : "Direct Price (BDT/unit):"}
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-2.5 text-base font-bold text-emerald-700">৳</span>
+                      <input
+                        type="number"
+                        step="any"
+                        min={1}
+                        required
+                        value={postPrice}
+                        onChange={(e) => setPostPrice(e.target.value)}
+                        placeholder="140"
+                        className="w-full pl-7 pr-3 py-2.5 bg-emerald-50 border border-emerald-400 rounded-xl font-black text-base text-emerald-950 shadow-2xs focus:ring-2 focus:ring-emerald-600"
+                      />
+                    </div>
+                    <span className="text-[10px] text-earth-500 mt-1 block">প্রতি {postUnit === "kg" ? "কেজি" : postUnit === "mon" ? "মণ" : "টন"} এর দর</span>
+                  </div>
+                </div>
+
+                {/* LIVE ESTIMATED LOT TOTAL VALUE */}
+                <div className="p-3.5 bg-white rounded-xl border border-emerald-300 shadow-2xs flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <div className="text-[11px] font-bold text-emerald-950 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-harvest-600" />
+                      <span>{language === "bn" ? "মোট প্রাক্কলিত লটের মূল্য (Total Value):" : "Estimated Lot Total:"}</span>
+                    </div>
+                    <div className="text-[11px] text-earth-500 mt-0.5">
+                      {Number(postQuantity) || 0} {postUnit} × ৳{Number(postPrice) || 0}
+                    </div>
+                  </div>
+                  <div className="text-xl font-black text-emerald-900 font-mono">
+                    ৳{((Number(postQuantity) || 0) * (Number(postPrice) || 0)).toLocaleString()} <span className="text-xs font-bold text-emerald-700">BDT</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 3: GRADE & LOCATION */}
+              <div className="bg-earth-50/70 p-4 rounded-2xl border border-earth-200/80 space-y-3.5">
+                <div className="flex items-center gap-2 text-earth-800 font-bold text-xs uppercase tracking-wide">
+                  <MapPin className="w-4 h-4 text-agri-700" />
+                  <span>{language === "bn" ? "৩. মান ও ডেলিভারি অবস্থান" : "3. Quality Grade & Location"}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "মান ও গ্রেড:" : "Quality Grade:"}
+                    </label>
+                    <select
+                      value={postGrade}
+                      onChange={(e) => setPostGrade(e.target.value as any)}
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs"
+                    >
+                      <option value="Grade A">Grade A (সুপারশপ/রপ্তানি মান — সেরা গুণমান)</option>
+                      <option value="Grade B">Grade B (সাধারণ পাইকারি আড়ত মান)</option>
+                      <option value="Standard">Standard (মানসম্মত সাধারণ ফসল)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-earth-700 font-bold mb-1">
+                      {language === "bn" ? "অবস্থান (জেলা):" : "District:"}
+                    </label>
+                    <select
+                      value={postDistrict}
+                      onChange={(e) => setPostDistrict(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-white border border-earth-300 rounded-xl font-bold text-earth-900 shadow-2xs"
+                    >
+                      {BANGLADESH_DISTRICTS.map((d) => (
+                        <option key={d.id} value={d.nameEn}>
+                          {d.nameEn} ({d.nameBn})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div>
                   <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "জাত / ভ্যারাইটি বিবরণ:" : "Variety:"}
+                    {language === "bn" ? "উপজেলা / মোকামের ঠিকানা:" : "Upazila / Local Hub:"}
                   </label>
                   <input
                     type="text"
-                    value={postVariety}
-                    onChange={(e) => setPostVariety(e.target.value)}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-medium text-earth-900"
-                    required
+                    value={postUpazila}
+                    onChange={(e) => setPostUpazila(e.target.value)}
+                    placeholder="যেমন: শেরপুর / মহাস্থান মোকাম"
+                    className="w-full px-3 py-2 bg-white border border-earth-300 rounded-xl font-medium text-earth-900"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "পরিমাণ:" : "Quantity:"}
-                  </label>
-                  <input
-                    type="number"
-                    min={20}
-                    value={postQuantity}
-                    onChange={(e) => setPostQuantity(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "একক (Unit):" : "Unit:"}
-                  </label>
-                  <select
-                    value={postUnit}
-                    onChange={(e) => setPostUnit(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900"
-                  >
-                    <option value="kg">কেজি (kg)</option>
-                    <option value="mon">মণ (Mon - 40 kg)</option>
-                    <option value="tonne">টন (Tonne)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "সরাসরি বিক্রয় মূল্য (টাকা/একক):" : "Direct Price (BDT/unit):"}
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={postPrice}
-                    onChange={(e) => setPostPrice(Number(e.target.value))}
-                    className="w-full px-3 py-2 bg-emerald-50 border border-emerald-400 rounded-xl font-black text-emerald-900"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "মান ও গ্রেড:" : "Quality Grade:"}
-                  </label>
-                  <select
-                    value={postGrade}
-                    onChange={(e) => setPostGrade(e.target.value as any)}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900"
-                  >
-                    <option value="Grade A">Grade A (সুপারশপ/রপ্তানি মান)</option>
-                    <option value="Grade B">Grade B (সাধারণ পাইকারি মান)</option>
-                    <option value="Standard">Standard (মানসম্মত সাধারণ মান)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-earth-700 font-bold mb-1">
-                    {language === "bn" ? "অবস্থান (জেলা):" : "District:"}
-                  </label>
-                  <select
-                    value={postDistrict}
-                    onChange={(e) => setPostDistrict(e.target.value)}
-                    className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900"
-                  >
-                    {BANGLADESH_DISTRICTS.map((d) => (
-                      <option key={d.id} value={d.nameEn}>
-                        {d.nameEn}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-earth-700 font-bold mb-1">
-                  {language === "bn" ? "ফসল সম্পর্কে বিশেষ বিবরণ:" : "Harvest Notes / Description:"}
+              {/* SECTION 4: HARVEST NOTES */}
+              <div className="space-y-1.5">
+                <label className="block text-earth-700 font-bold">
+                  {language === "bn" ? "৪. ফসল সম্পর্কে বিশেষ বিবরণ বা কৃষকের নোট:" : "4. Special Notes & Guarantees:"}
                 </label>
                 <textarea
                   rows={2}
                   value={postNotes}
                   onChange={(e) => setPostNotes(e.target.value)}
-                  placeholder="যেমন: আজ সকালে তোলা ফ্রেশ ফসল। সরাসরি ট্রাক লোড করে দেওয়ার ব্যবস্থা আছে।"
-                  className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl text-earth-900"
+                  placeholder={
+                    language === "bn"
+                      ? "যেমন: আজ সকালে তোলা ফ্রেশ ফসল। সরাসরি খামার থেকে ট্রাক লোড করে দেওয়ার ব্যবস্থা আছে।"
+                      : "e.g., Freshly harvested this morning. Direct truck loading available from farm."
+                  }
+                  className="w-full px-3 py-2 bg-white border border-earth-300 rounded-xl text-earth-900 text-xs focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
 
-              <div className="pt-3 border-t border-earth-100 flex justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setShowPostModal(false)}
-                  className="px-4 py-2.5 border border-earth-300 text-earth-700 rounded-xl font-bold"
-                >
-                  {t.common.cancel}
-                </button>
-                <button
-                  type="submit"
-                  disabled={postSubmitting}
-                  className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm flex items-center gap-1.5"
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{postSubmitting ? t.common.loading : (language === "bn" ? "পোস্ট প্রকাশ করুন" : "Publish Listing")}</span>
-                </button>
+              {/* ACTION BUTTONS */}
+              <div className="pt-4 border-t border-earth-100 flex flex-wrap items-center justify-between gap-3">
+                <div className="text-[11px] text-earth-500 font-medium">
+                  {language === "bn" ? "✓ সরাসরি কৃষি বাজারের লাইভ তালিকায় যুক্ত হবে" : "✓ Will instantly appear in live Krishi Bazar"}
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setShowPostModal(false)}
+                    className="px-4 py-2.5 border border-earth-300 text-earth-700 rounded-xl font-bold hover:bg-earth-100 transition"
+                  >
+                    {t.common.cancel}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={postSubmitting}
+                    className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm flex items-center gap-1.5 transition disabled:opacity-50"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>{postSubmitting ? t.common.loading : (language === "bn" ? "পোস্ট প্রকাশ করুন" : "Publish Listing")}</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* MODAL 2: DIRECT PURCHASE / ORDER MODAL */}
+      {/* MODAL 2: DIRECT PURCHASE / ORDER MODAL (EDITABLE NUMBERS) */}
       {buyingItem && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
           <div className="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl border border-earth-200 max-h-[92vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
@@ -641,7 +816,7 @@ export default function MarketplacePage() {
                     <ShoppingBag className="w-6 h-6 text-emerald-700" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase">
                       DIRECT PURCHASE
                     </span>
                     <h2 className="text-xl font-black text-earth-900 mt-1">
@@ -662,13 +837,13 @@ export default function MarketplacePage() {
 
                 <form onSubmit={handleConfirmPurchase} className="space-y-4 text-xs">
                   {/* Item Summary Bar */}
-                  <div className="p-3 bg-earth-50 rounded-2xl border border-earth-200 flex items-center justify-between">
+                  <div className="p-3.5 bg-earth-50 rounded-2xl border border-earth-200 flex items-center justify-between">
                     <div>
                       <div className="text-[10px] uppercase font-bold text-earth-500">মজুত পরিমাণ</div>
                       <div className="font-bold text-earth-900">{buyingItem.quantity.toLocaleString()} {buyingItem.unit}</div>
                     </div>
                     <div>
-                      <div className="text-[10px] uppercase font-bold text-earth-500">দর</div>
+                      <div className="text-[10px] uppercase font-bold text-earth-500">নির্ধারিত দর</div>
                       <div className="font-black text-emerald-800">৳{buyingItem.expectedPrice || buyingItem.startingPrice}/{buyingItem.unit}</div>
                     </div>
                     <div>
@@ -677,19 +852,47 @@ export default function MarketplacePage() {
                     </div>
                   </div>
 
+                  {/* Quantity input with free typing & presets */}
                   <div>
-                    <label className="block text-earth-700 font-bold mb-1">
-                      {language === "bn" ? `ক্রয়ের পরিমাণ (${buyingItem.unit}):` : `Purchase Quantity (${buyingItem.unit}):`}
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-earth-700 font-bold">
+                        {language === "bn" ? `ক্রয়ের পরিমাণ (${buyingItem.unit}) টাইপ করুন:` : `Purchase Quantity (${buyingItem.unit}):`}
+                      </label>
+                      <span className="text-[10px] text-earth-500">মজুত: {buyingItem.quantity} {buyingItem.unit}</span>
+                    </div>
                     <input
                       type="number"
-                      min={10}
+                      step="any"
+                      min={1}
                       max={buyingItem.quantity}
-                      value={buyQuantity}
-                      onChange={(e) => setBuyQuantity(Number(e.target.value))}
-                      className="w-full px-3 py-2 bg-emerald-50/50 border border-emerald-300 rounded-xl font-black text-base text-emerald-950"
                       required
+                      value={buyQuantity}
+                      onChange={(e) => setBuyQuantity(e.target.value)}
+                      placeholder="যেমন: 100"
+                      className="w-full px-3.5 py-2.5 bg-emerald-50/50 border border-emerald-300 rounded-xl font-black text-base text-emerald-950 focus:ring-2 focus:ring-emerald-600"
                     />
+
+                    {/* Quick quantity selector pills */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-[10px] text-earth-500 font-semibold">কুইক সিলেক্ট:</span>
+                      {[50, 100, 200].filter(q => q <= buyingItem.quantity).map((qty) => (
+                        <button
+                          key={qty}
+                          type="button"
+                          onClick={() => setBuyQuantity(String(qty))}
+                          className="px-2 py-0.5 rounded bg-earth-100 hover:bg-earth-200 text-earth-700 text-[10px] font-bold"
+                        >
+                          {qty} {buyingItem.unit}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setBuyQuantity(String(buyingItem.quantity))}
+                        className="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold"
+                      >
+                        সবটুকু ({buyingItem.quantity})
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -704,7 +907,7 @@ export default function MarketplacePage() {
                       >
                         {BANGLADESH_DISTRICTS.map((d) => (
                           <option key={d.id} value={d.nameEn}>
-                            {d.nameEn}
+                            {d.nameEn} ({d.nameBn})
                           </option>
                         ))}
                       </select>
@@ -728,10 +931,12 @@ export default function MarketplacePage() {
                   <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200 flex items-center justify-between">
                     <div>
                       <span className="text-[11px] text-emerald-900 font-bold">মোট প্রদেয় মূল্য (Total Bill):</span>
-                      <p className="text-[10px] text-emerald-700">কমিশনমুক্ত সরাসরি কৃষক দর</p>
+                      <p className="text-[10px] text-emerald-700">
+                        {Number(buyQuantity) || 0} {buyingItem.unit} × ৳{buyingItem.expectedPrice || buyingItem.startingPrice}
+                      </p>
                     </div>
                     <div className="text-xl font-black text-emerald-900 font-mono">
-                      ৳{(buyQuantity * (buyingItem.expectedPrice || buyingItem.startingPrice)).toLocaleString()} BDT
+                      ৳{((Number(buyQuantity) || 0) * (buyingItem.expectedPrice || buyingItem.startingPrice)).toLocaleString()} BDT
                     </div>
                   </div>
 
@@ -739,14 +944,14 @@ export default function MarketplacePage() {
                     <button
                       type="button"
                       onClick={() => setBuyingItem(null)}
-                      className="px-4 py-2.5 border border-earth-300 text-earth-700 rounded-xl font-bold"
+                      className="px-4 py-2.5 border border-earth-300 text-earth-700 rounded-xl font-bold hover:bg-earth-100 transition"
                     >
                       {t.common.cancel}
                     </button>
                     <button
                       type="submit"
                       disabled={buySubmitting}
-                      className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm flex items-center gap-1.5"
+                      className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm flex items-center gap-1.5 transition disabled:opacity-50"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>{buySubmitting ? t.common.loading : (language === "bn" ? "অর্ডার নিশ্চিত করুন" : "Confirm Purchase")}</span>

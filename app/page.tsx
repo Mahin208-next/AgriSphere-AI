@@ -4,20 +4,20 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useApp } from "@/context/AppContext";
 import { Auction, MarketPriceRecord } from "@/types";
-import { 
-  Sprout, 
-  Gavel, 
-  Building2, 
-  TrendingUp, 
-  Globe2, 
-  Bot, 
-  CheckCircle2, 
-  ArrowRight, 
-  ShieldCheck, 
-  Sparkles, 
-  Scale, 
-  Clock, 
-  MapPin, 
+import {
+  Sprout,
+  Gavel,
+  Building2,
+  TrendingUp,
+  Globe2,
+  Bot,
+  CheckCircle2,
+  ArrowRight,
+  ShieldCheck,
+  Sparkles,
+  Scale,
+  Clock,
+  MapPin,
   ChevronRight,
   Truck
 } from "lucide-react";
@@ -169,7 +169,7 @@ export default function HomePage() {
             {/* System A Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-earth-200 shadow-sm relative overflow-hidden group hover:border-agri-400 transition">
               <div className="absolute top-0 right-0 w-32 h-32 bg-agri-50 rounded-full blur-2xl group-hover:bg-agri-100 transition" />
-              
+
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-2xl bg-agri-100 text-agri-800 flex items-center justify-center">
                   <Gavel className="w-6 h-6" />
@@ -215,7 +215,7 @@ export default function HomePage() {
             {/* System B Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-earth-200 shadow-sm relative overflow-hidden group hover:border-harvest-400 transition">
               <div className="absolute top-0 right-0 w-32 h-32 bg-harvest-50 rounded-full blur-2xl group-hover:bg-harvest-100 transition" />
-              
+
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-2xl bg-harvest-100 text-harvest-800 flex items-center justify-center">
                   <Building2 className="w-6 h-6" />

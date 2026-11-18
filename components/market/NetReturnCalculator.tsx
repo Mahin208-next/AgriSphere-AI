@@ -5,14 +5,14 @@ import { useApp } from "@/context/AppContext";
 import { MarketRecommendation } from "@/types";
 import { CROPS_DATA } from "@/lib/data/crops";
 import { BANGLADESH_DISTRICTS } from "@/lib/data/bangladesh-geo";
-import { 
-  Calculator, 
-  TrendingUp, 
-  Truck, 
-  MapPin, 
-  CheckCircle2, 
-  Sparkles, 
-  ArrowRight, 
+import {
+  Calculator,
+  TrendingUp,
+  Truck,
+  MapPin,
+  CheckCircle2,
+  Sparkles,
+  ArrowRight,
   Info,
   Scale
 } from "lucide-react";
@@ -151,11 +151,10 @@ export default function NetReturnCalculator() {
             return (
               <div
                 key={rec.marketId}
-                className={`rounded-2xl border p-5 flex flex-col justify-between transition ${
-                  isTopRank
-                    ? "bg-gradient-to-b from-agri-50/70 to-white border-agri-400 shadow-md ring-2 ring-agri-500/20"
-                    : "bg-white border-earth-200 hover:border-earth-300"
-                }`}
+                className={`rounded-2xl border p-5 flex flex-col justify-between transition ${isTopRank
+                  ? "bg-gradient-to-b from-agri-50/70 to-white border-agri-400 shadow-md ring-2 ring-agri-500/20"
+                  : "bg-white border-earth-200 hover:border-earth-300"
+                  }`}
               >
                 <div>
                   {/* Top Rank Badge */}

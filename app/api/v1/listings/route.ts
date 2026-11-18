@@ -42,7 +42,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const crop = CROPS_DATA.find((c) => c.id === body.cropId) || CROPS_DATA[0];
+    const crop = CROPS_DATA.find((c) => c.id === body.cropId);
+    const cropNameBn = body.customCropNameBn || body.cropNameBn || crop?.nameBn || "অন্যান্য ফসল";
+    const cropNameEn = body.customCropNameEn || body.cropNameEn || crop?.nameEn || "Custom Produce";
+    const defaultImage = crop?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80";
 
     const listingId = `list_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const isAuction = !!body.isAuction;
@@ -53,9 +56,9 @@ export async function POST(req: Request) {
       farmerId: currentUser.id,
       farmerName: currentUser.name,
       farmerPhone: currentUser.phone,
-      cropId: crop.id,
-      cropNameEn: crop.nameEn,
-      cropNameBn: crop.nameBn,
+      cropId: body.cropId || "custom",
+      cropNameEn,
+      cropNameBn,
       variety: body.variety || "Local Selection",
       quantity: Number(body.quantity) || 1000,
       unit: body.unit || "kg",
@@ -67,7 +70,7 @@ export async function POST(req: Request) {
       privateReservePrice: Number(body.privateReservePrice) || Number(body.startingPrice) || 25,
       isAuction,
       status: isAuction ? "in_auction" : "active",
-      images: body.images && body.images.length > 0 ? body.images : [crop.image],
+      images: body.images && body.images.length > 0 ? body.images : [defaultImage],
       videoUrl: body.videoUrl || undefined,
       isLiveStream: !!body.isLiveStream,
       harvestDate: body.harvestDate || new Date().toISOString().split("T")[0],
@@ -87,8 +90,8 @@ export async function POST(req: Request) {
         listingId,
         farmerId: currentUser.id,
         farmerName: currentUser.name,
-        cropNameEn: crop.nameEn,
-        cropNameBn: crop.nameBn,
+        cropNameEn,
+        cropNameBn,
         quantity: listing.quantity,
         unit: listing.unit,
         grade: listing.grade,
@@ -122,7 +125,7 @@ export async function POST(req: Request) {
       "LISTING_CREATED",
       "ProductListing",
       listingId,
-      `Farmer created ${isAuction ? "live auction" : "direct"} listing for ${listing.quantity} ${listing.unit} of ${crop.nameEn} (Expected: BDT ${listing.expectedPrice}/kg)`
+      `Farmer created ${isAuction ? "live auction" : "direct"} listing for ${listing.quantity} ${listing.unit} of ${cropNameEn} (Expected: BDT ${listing.expectedPrice}/kg)`
     );
 
     return NextResponse.json({ success: true, listing, auctionId });

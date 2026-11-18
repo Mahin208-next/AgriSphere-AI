@@ -41,6 +41,9 @@ export default function FarmerAuctionCreatorModal({
 
   // Form states
   const [cropId, setCropId] = useState("green_chilli");
+  const [isCustomCrop, setIsCustomCrop] = useState(false);
+  const [customCropNameBn, setCustomCropNameBn] = useState("");
+  const [customCropNameEn, setCustomCropNameEn] = useState("");
   const [variety, setVariety] = useState("বিন্দু জাতের ফ্রেশ কাঁচা মরিচ");
   const [quantity, setQuantity] = useState(1500);
   const [unit, setUnit] = useState<"kg" | "mon" | "tonne">("kg");
@@ -157,7 +160,9 @@ export default function FarmerAuctionCreatorModal({
     try {
       const isLive = mediaMode === "live";
       const payload = {
-        cropId,
+        cropId: isCustomCrop ? "custom" : cropId,
+        customCropNameBn: isCustomCrop ? (customCropNameBn.trim() || "কৃষকের নিজস্ব ফসল") : undefined,
+        customCropNameEn: isCustomCrop ? (customCropNameEn.trim() || "Custom Crop") : undefined,
         variety,
         quantity,
         unit,
@@ -168,7 +173,7 @@ export default function FarmerAuctionCreatorModal({
         isAuction: true,
         auctionDurationMinutes: durationMinutes,
         minIncrement,
-        images: uploadedImages.length > 0 ? uploadedImages : [selectedCrop.image],
+        images: uploadedImages.length > 0 ? uploadedImages : [selectedCrop?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80"],
         videoUrl: mediaMode === "video" ? videoUrl : undefined,
         isLiveStream: isLive,
       };
@@ -493,19 +498,34 @@ export default function FarmerAuctionCreatorModal({
               <select
                 value={cropId}
                 onChange={(e) => {
-                  setCropId(e.target.value);
-                  const c = CROPS_DATA.find((item) => item.id === e.target.value);
-                  if (c) {
-                    setVariety(`${c.nameBn} - বাছাইকৃত প্রথম মান`);
+                  const val = e.target.value;
+                  if (val === "custom") {
+                    setIsCustomCrop(true);
+                    setCropId("custom");
+                    setVariety("");
+                  } else {
+                    setIsCustomCrop(false);
+                    setCropId(val);
+                    const c = CROPS_DATA.find((item) => item.id === val);
+                    if (c) {
+                      setVariety(`${c.nameBn} - বাছাইকৃত প্রথম মান`);
+                    }
                   }
                 }}
                 className="w-full px-3 py-2 bg-earth-50 border border-earth-300 rounded-xl font-bold text-earth-900 focus:ring-2 focus:ring-agri-600 focus:outline-none"
               >
-                {CROPS_DATA.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nameEn} ({c.nameBn})
+                <optgroup label={language === "bn" ? "জনপ্রিয় ফসল ও ফলসমূহ" : "Popular Produce"}>
+                  {CROPS_DATA.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nameEn} ({c.nameBn})
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label={language === "bn" ? "কাস্টম ফসল" : "Custom Produce"}>
+                  <option value="custom">
+                    {language === "bn" ? "➕ অন্য ফসল বা ফল (নিজের মতো লিখুন)" : "➕ Add Custom Crop / Fruit"}
                   </option>
-                ))}
+                </optgroup>
               </select>
             </div>
 
@@ -523,6 +543,23 @@ export default function FarmerAuctionCreatorModal({
               />
             </div>
           </div>
+
+          {/* Custom Crop Name Box */}
+          {(isCustomCrop || cropId === "custom") && (
+            <div className="p-3 bg-amber-50/80 border border-amber-300 rounded-xl space-y-2 animate-in fade-in duration-200">
+              <label className="block text-amber-950 font-bold text-xs">
+                {language === "bn" ? "নতুন ফসলের বাংলা নাম লিখুন *" : "Custom Crop Name (Bangla) *"}
+              </label>
+              <input
+                type="text"
+                required
+                value={customCropNameBn}
+                onChange={(e) => setCustomCropNameBn(e.target.value)}
+                placeholder="যেমন: লিচু, আম, ড্রাগন ফল, পেয়ারা, তরমুজ..."
+                className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-earth-900 font-bold text-xs"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
