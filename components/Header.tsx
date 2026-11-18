@@ -37,16 +37,16 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-earth-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white border-b border-earth-200 shadow-2xs w-full">
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16 sm:h-18">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="flex items-center justify-between h-16 sm:h-18 gap-2 sm:gap-4">
           {/* Logo & Brand */}
-          <Link href="/" className="flex items-center gap-2 group py-1 shrink-0 mr-2 xl:mr-3">
+          <Link href="/" className="flex items-center gap-2 group py-1 shrink-0">
             <img
               src="/logo.png"
               alt="KrishiSetu AI — Connecting Farmers to Every Market"
-              className="h-10 sm:h-12 w-auto min-w-[135px] sm:min-w-[155px] shrink-0 object-contain transition-transform group-hover:scale-[1.02]"
+              className="h-9 sm:h-11 md:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02]"
             />
           </Link>
 

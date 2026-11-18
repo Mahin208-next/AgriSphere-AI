@@ -9,8 +9,8 @@ export default function Footer() {
   const { language, t } = useApp();
 
   return (
-    <footer className="bg-earth-900 text-earth-300 pt-12 pb-8 border-t border-earth-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <footer className="bg-earth-900 text-earth-300 pt-12 pb-8 border-t border-earth-800 w-full">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Brand Info */}
           <div className="space-y-3">
