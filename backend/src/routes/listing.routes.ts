@@ -26,6 +26,11 @@ router.post("/", (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    const isAuction = !!body.isAuction;
+    if (isAuction && currentUser.role !== "farmer") {
+      return res.status(403).json({ error: "Only verified farmers can create live auctions." });
+    }
+
     const crop = CROPS_CATALOG.find((c) => c.id === body.cropId) || CROPS_CATALOG[0];
     const listingId = `list_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const isAuction = !!body.isAuction;

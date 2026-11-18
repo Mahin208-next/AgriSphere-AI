@@ -38,16 +38,7 @@ export default function AuctionsPage() {
 
   const handleOpenCreateAuction = () => {
     setRoleAlert(null);
-    if (!currentUser) {
-      router.push("/login?redirect=/auctions");
-      return;
-    }
-    if (currentUser.role !== "farmer") {
-      setRoleAlert(
-        language === "bn"
-          ? "কেবলমাত্র কৃষকরা নতুন ফসল নিলামে তুলতে পারেন। অনুগ্রহ করে কৃষক প্রোফাইলে লগইন করুন।"
-          : "Only verified farmers can list crops for auction. Please sign in as a Farmer."
-      );
+    if (!currentUser || currentUser.role !== "farmer") {
       return;
     }
     setShowCreateModal(true);
@@ -77,14 +68,16 @@ export default function AuctionsPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
-          {/* Put Crop in Auction Button */}
-          <button
-            onClick={handleOpenCreateAuction}
-            className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-red-600 to-agri-700 hover:from-red-700 hover:to-agri-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md shadow-agri-950/20"
-          >
-            <Radio className="w-3.5 h-3.5 animate-pulse shrink-0" />
-            <span>{language === "bn" ? "+ নিজের ফসল নিলামে তুলুন (ছবি/ভিডিও/লাইভ)" : "+ Put Crop in Auction (Photo/Video/Live)"}</span>
-          </button>
+          {/* Put Crop in Auction Button (STRICTLY FOR FARMERS ONLY) */}
+          {currentUser && currentUser.role === "farmer" && (
+            <button
+              onClick={handleOpenCreateAuction}
+              className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-red-600 to-agri-700 hover:from-red-700 hover:to-agri-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-md shadow-agri-950/20"
+            >
+              <Radio className="w-3.5 h-3.5 animate-pulse shrink-0" />
+              <span>{language === "bn" ? "+ নিজের ফসল নিলামে তুলুন (ছবি/ভিডিও/লাইভ)" : "+ Put Crop in Auction (Photo/Video/Live)"}</span>
+            </button>
+          )}
 
           {/* Filters */}
           <div className="flex items-center bg-white p-1 rounded-xl border border-earth-200 text-xs shadow-2xs overflow-x-auto max-w-full">
@@ -150,12 +143,14 @@ export default function AuctionsPage() {
         </div>
       )}
 
-      {/* Auction Launch Modal */}
-      <FarmerAuctionCreatorModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSuccess={fetchAuctions}
-      />
+      {/* Auction Launch Modal (STRICTLY FOR FARMERS ONLY) */}
+      {currentUser && currentUser.role === "farmer" && (
+        <FarmerAuctionCreatorModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={fetchAuctions}
+        />
+      )}
     </div>
   );
 }

@@ -42,13 +42,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const isAuction = !!body.isAuction;
+    if (isAuction && currentUser.role !== "farmer") {
+      return NextResponse.json(
+        { error: "Only verified farmers can create live auctions." },
+        { status: 403 }
+      );
+    }
+
     const crop = CROPS_DATA.find((c) => c.id === body.cropId);
     const cropNameBn = body.customCropNameBn || body.cropNameBn || crop?.nameBn || "অন্যান্য ফসল";
     const cropNameEn = body.customCropNameEn || body.cropNameEn || crop?.nameEn || "Custom Produce";
     const defaultImage = crop?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80";
 
     const listingId = `list_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    const isAuction = !!body.isAuction;
     let auctionId: string | undefined = undefined;
 
     const listing: ProductListing = {
