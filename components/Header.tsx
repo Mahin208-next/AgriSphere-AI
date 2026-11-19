@@ -49,7 +49,7 @@ export default function Header() {
             <img
               src="/logo.png"
               alt="KrishiSetu AI"
-              className="h-7 sm:h-8 md:h-8.5 xl:h-9.5 2xl:h-10 w-auto object-contain transition-transform group-hover:scale-[1.02]"
+              className="h-7 sm:h-8 md:h-8.5 xl:h-9.5 2xl:h-10 w-auto min-w-[125px] sm:min-w-[145px] xl:min-w-[160px] shrink-0 object-contain transition-transform group-hover:scale-[1.02]"
             />
           </Link>
 
