@@ -10,7 +10,6 @@ import {
   TrendingUp,
   Building2,
   Globe2,
-  Bot,
   LayoutDashboard,
   UserCheck,
   Menu,
@@ -38,7 +37,6 @@ export default function Header() {
     { href: "/market-intelligence", label: t.nav.prices, shortBn: "বাজার দর", shortEn: "Prices", icon: TrendingUp },
     { href: "/procurement", label: t.nav.procurement, shortBn: "চাহিদা", shortEn: "Demands", icon: Building2 },
     { href: "/export", label: t.nav.export, shortBn: "রপ্তানি", shortEn: "Export", icon: Globe2 },
-    { href: "/assistant", label: t.nav.assistant, shortBn: "সহকারী", shortEn: "AI Chat", icon: Bot },
   ];
 
   return (
