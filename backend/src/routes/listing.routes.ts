@@ -33,7 +33,6 @@ router.post("/", (req, res) => {
 
     const crop = CROPS_CATALOG.find((c) => c.id === body.cropId) || CROPS_CATALOG[0];
     const listingId = `list_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
-    const isAuction = !!body.isAuction;
     let auctionId: string | undefined = undefined;
 
     const listing: any = {
