@@ -268,7 +268,9 @@ function LoginFormContent() {
                 </span>
               </span>
               <span className="text-[11px] font-semibold text-agri-700 shrink-0">
-                {language === "bn" ? "৭টি ভূমিকা উপলব্ধ" : "7 Roles Available"}
+                {language === "bn"
+                  ? `${ALL_ROLES.length.toString().replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[+d])}টি ভূমিকা উপলব্ধ`
+                  : `${ALL_ROLES.length} Roles Available`}
               </span>
             </label>
 
