@@ -9,12 +9,18 @@ export async function POST(req: Request) {
     const originDistrict = body.originDistrict || "Bogura";
     const quantityKg = Number(body.quantityKg) || 1000;
     const grade = body.grade || "Grade A";
+    const customWholesalePrice = body.customWholesalePrice ? Number(body.customWholesalePrice) : undefined;
+    const vehicleType = body.vehicleType || "covered_van";
+    const customFeePercent = body.customFeePercent !== undefined ? Number(body.customFeePercent) : undefined;
 
     const recommendations = db.getBestMarketRecommendations({
       cropId,
       originDistrict,
       quantityKg,
       grade,
+      customWholesalePrice,
+      vehicleType,
+      customFeePercent,
     });
 
     return NextResponse.json({

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import { TrendingUp, Calculator } from "lucide-react";
 import MarketPriceView from "@/components/market/MarketPriceView";
+import NetReturnCalculator from "@/components/market/NetReturnCalculator";
 import AICalculationGuide from "@/components/market/AICalculationGuide";
 
 function MarketIntelligenceContent() {
@@ -61,7 +62,10 @@ function MarketIntelligenceContent() {
       {activeTab === "prices" ? (
         <MarketPriceView />
       ) : (
-        <AICalculationGuide />
+        <div className="space-y-8">
+          <NetReturnCalculator />
+          <AICalculationGuide />
+        </div>
       )}
     </div>
   );
