@@ -2,6 +2,24 @@ export function formatBdt(amount: number): string {
   return `৳${amount.toLocaleString()}`;
 }
 
+export const formatBDT = formatBdt;
+
+export function formatKg(kg: number): string {
+  return `${kg.toLocaleString()} kg`;
+}
+
+export function formatDate(dateString: string): string {
+  try {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
+}
+
 export function formatWeight(kg: number, unit: "kg" | "mon" | "tonne" = "kg"): string {
   if (unit === "tonne") return `${(kg / 1000).toFixed(1)} Tonne`;
   if (unit === "mon") return `${(kg / 40).toFixed(1)} Mon`;

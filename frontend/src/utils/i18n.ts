@@ -219,3 +219,19 @@ export const TRANSLATIONS = {
   },
 };
 
+export function t(key: string, lang: Language = "bn"): string {
+  const dict = TRANSLATIONS[lang] || TRANSLATIONS.bn;
+  const navMap: Record<string, string> = {
+    navHome: dict.nav.home,
+    navAuctions: dict.nav.auctions,
+    navProcurement: dict.nav.procurement,
+    navIntelligence: dict.nav.prices,
+    navAssistant: dict.nav.assistant,
+    navExport: dict.nav.export,
+    navDashboard: dict.nav.dashboard,
+  };
+  if (navMap[key]) return navMap[key];
+  return key;
+}
+
+
