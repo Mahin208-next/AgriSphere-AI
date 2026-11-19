@@ -26,6 +26,11 @@ export default function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Isolate Admin Panel: Do not render standard consumer header on /admin routes
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const navLinks = [
     { href: "/", label: t.nav.home, icon: Sprout },
     { href: "/marketplace", label: t.nav.marketplace, icon: ShoppingBag },

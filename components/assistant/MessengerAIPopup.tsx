@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import {
   Bot,
@@ -42,7 +43,13 @@ function getTimeGreeting(isEnglish: boolean = false): string {
 }
 
 export default function MessengerAIPopup() {
+  const pathname = usePathname();
   const { currentUser, currentRole, language, t } = useApp();
+
+  // Hide AI Assistant widget on admin portal
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {

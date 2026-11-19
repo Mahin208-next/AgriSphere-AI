@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import FarmerDashboard from "@/components/dashboard/FarmerDashboard";
 import BuyerDashboard from "@/components/dashboard/BuyerDashboard";
@@ -22,7 +23,14 @@ import {
 import { UserRole } from "@/types";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { currentUser, currentRole, allUsers, switchUserRole, loginByRole, logout, language, t } = useApp();
+
+  useEffect(() => {
+    if (currentUser?.role === "admin") {
+      router.replace("/admin");
+    }
+  }, [currentUser, router]);
 
   // If visitor is NOT logged in: Show Access Gate
   if (!currentUser) {
@@ -161,26 +169,6 @@ export default function DashboardPage() {
           </button>
         </div>
       </div>
-
-      {/* Role Notice if logged in as Admin */}
-      {currentRole === "admin" && (
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0" />
-            <span>
-              {language === "bn"
-                ? "আপনি প্ল্যাটফর্ম অ্যাডমিন হিসেবে লগইন আছেন। বিস্তারিত অ্যাডমিন ড্যাশবোর্ড পরিচালনা করতে /admin গেটওয়েতে যান।"
-                : "You are logged in as Platform Admin. Access the complete control room via the /admin gateway."}
-            </span>
-          </div>
-          <Link
-            href="/admin"
-            className="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold shrink-0 text-xs transition"
-          >
-            {language === "bn" ? "/admin প্যানেলে যান" : "Go to /admin"}
-          </Link>
-        </div>
-      )}
 
       {/* Dynamic Role-Based View */}
       {currentRole === "farmer" && <FarmerDashboard />}

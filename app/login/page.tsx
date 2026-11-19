@@ -172,27 +172,6 @@ const ALL_ROLES: RoleOption[] = [
       companyEn: "Al-Madina General Trading LLC, Dubai",
     },
   },
-  {
-    role: "admin",
-    titleBn: "সিস্টেম অ্যাডমিনিস্ট্রেটর ও রেগুলেটর",
-    titleEn: "System Administrator & Regulatory Auditor",
-    descBn: "প্ল্যাটফর্ম নিরাপত্তা, DAM বাজার দর যাচাই, অডিট লগ এবং নিয়ন্ত্রক ব্যবস্থাপনা।",
-    descEn: "Platform regulatory governance, audit trail verification & DAM price indexing.",
-    icon: ShieldCheck,
-    color: "text-rose-700",
-    bgLight: "bg-rose-50",
-    borderLight: "border-rose-200",
-    badgeBn: "কেন্দ্রীয় প্রশাসন",
-    badgeEn: "Platform Admin",
-    demoUser: {
-      id: "usr_admin_platform",
-      nameBn: "ঢাকা সেন্ট্রাল প্ল্যাটফর্ম অ্যাডমিনিস্ট্রেটর",
-      nameEn: "Central Platform Administrator",
-      phone: "+880 1700-000001",
-      companyBn: "কৃষিসেতু ও ডিএএম রেগুলেটরি সেল",
-      companyEn: "KrishiSetu & DAM Regulatory Cell",
-    },
-  },
 ];
 
 function LoginFormContent() {
@@ -217,13 +196,8 @@ function LoginFormContent() {
     setErrorMsg("");
     const target = ALL_ROLES.find((r) => r.role === role);
     if (target) {
-      if (role === "admin") {
-        setPassword("admin2026");
-        setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
-      } else {
-        setPassword("demo1234");
-        setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
-      }
+      setPassword("demo1234");
+      setPhoneNumber(target.demoUser.phone.replace(/[^0-9]/g, ""));
     }
   };
 
@@ -233,17 +207,6 @@ function LoginFormContent() {
     setErrorMsg("");
 
     try {
-      if (selectedRole === "admin") {
-        const res = await adminLogin(password || "admin2026");
-        if (res.success) {
-          router.push("/admin");
-          return;
-        } else {
-          setErrorMsg(res.error || (language === "bn" ? "ভুল অ্যাডমিন পাসকি।" : "Invalid admin passkey."));
-          return;
-        }
-      }
-
       // Try login by selected demo role user ID
       const success = await login(currentRoleConfig.demoUser.id);
       if (success) {
@@ -373,69 +336,41 @@ function LoginFormContent() {
 
           {/* Login Form Credentials */}
           <form onSubmit={handleLogin} className="space-y-4">
-            {selectedRole !== "admin" ? (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-semibold text-earth-700 mb-1">
-                    {language === "bn" ? "মোবাইল নম্বর / ইউজার আইডি" : "Phone Number / User ID"}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Phone className="w-4 h-4 text-earth-400" />
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="017XXXXXXXX"
-                      className="w-full pl-9 pr-3 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-earth-700 mb-1">
-                    {language === "bn" ? "পাসওয়ার্ড / পাসকোড" : "Password / Passcode"}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <KeyRound className="w-4 h-4 text-earth-400" />
-                    </div>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-9 pr-10 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-earth-400 hover:text-earth-600"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
+            <div className="space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-earth-700 mb-1">
-                  {language === "bn" ? "অ্যাডমিন সিকিউর পাসকি (Passkey)" : "Admin Secure Passkey"}
+                  {language === "bn" ? "মোবাইল নম্বর / ইউজার আইডি" : "Phone Number / User ID"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <ShieldCheck className="w-4 h-4 text-rose-500" />
+                    <Phone className="w-4 h-4 text-earth-400" />
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="017XXXXXXXX"
+                    className="w-full pl-9 pr-3 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-earth-700 mb-1">
+                  {language === "bn" ? "পাসওয়ার্ড / পাসকোড" : "Password / Passcode"}
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <KeyRound className="w-4 h-4 text-earth-400" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="admin2026"
-                    className="w-full pl-9 pr-10 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-rose-600 focus:border-rose-600 text-earth-900 bg-earth-50/40"
+                    placeholder="••••••••"
+                    className="w-full pl-9 pr-10 py-2.5 text-sm border border-earth-300 rounded-xl focus:ring-2 focus:ring-agri-600 focus:border-agri-600 text-earth-900 bg-earth-50/40"
                   />
                   <button
                     type="button"
@@ -446,7 +381,7 @@ function LoginFormContent() {
                   </button>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Quick Demo Helper Hint */}
             <p className="text-[11px] text-earth-500">

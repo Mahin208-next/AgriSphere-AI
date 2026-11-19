@@ -2,11 +2,18 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useApp } from "@/context/AppContext";
 import { ShieldCheck } from "lucide-react";
 
 export default function Footer() {
+  const pathname = usePathname();
   const { language, t } = useApp();
+
+  // Isolate Admin Panel: Do not render consumer footer on /admin
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <footer className="bg-earth-900 text-earth-300 pt-12 pb-8 border-t border-earth-800 w-full">

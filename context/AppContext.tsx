@@ -53,9 +53,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         // Only set currentUser if user was explicitly logged in
         if (storedUserId && data.user) {
           setCurrentUser(data.user);
-        } else if (adminToken === "true" && data.user?.role === "admin") {
-          setCurrentUser(data.user);
-          setIsAdminAuthenticated(true);
+        } else if (adminToken === "true") {
+          const admin = data.user?.role === "admin" ? data.user : data.allUsers?.find((u: any) => u.role === "admin");
+          if (admin) {
+            setCurrentUser(admin);
+            setIsAdminAuthenticated(true);
+          } else {
+            setCurrentUser(null);
+          }
         } else {
           setCurrentUser(null);
         }
