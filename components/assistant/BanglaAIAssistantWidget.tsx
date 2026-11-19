@@ -156,14 +156,14 @@ export default function BanglaAIAssistantWidget() {
               <h3 className="text-xs sm:text-base font-bold text-white truncate">
                 {language === "bn" ? "KrishiSetu AI বাংলা কৃষি সহকারী" : "KrishiSetu AI Market Assistant"}
               </h3>
-              <span className="hidden min-[420px]:inline px-2 py-0.5 rounded text-[10px] font-bold bg-agri-700 text-agri-100 border border-agri-600 shrink-0">
-                Live Data Connected
+              <span className="hidden min-[420px]:inline px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-800 text-emerald-200 border border-emerald-600 shrink-0">
+                ⚡ NVIDIA Nemotron 550B
               </span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-agri-200 truncate">
               {language === "bn"
-                ? "কৃষি বিপণন অধিদপ্তর (DAMBD), লাইভ নিলাম ও কারখানার চাহিদার সাথে সংযুক্ত"
-                : "Real-time Grounded with DAM Market Feeds, Live Auctions & B2B Procurements"}
+                ? "NVIDIA Nemotron-3 550B LLM • কৃষি বিপণন অধিদপ্তর (DAMBD) ও লাইভ নিলামের সাথে সংযুক্ত"
+                : "Powered by NVIDIA Nemotron-3 Ultra 550B • Real-time DAM & Live Auction Feeds"}
             </p>
           </div>
         </div>

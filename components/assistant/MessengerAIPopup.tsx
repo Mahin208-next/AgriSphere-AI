@@ -240,12 +240,12 @@ export default function MessengerAIPopup() {
                   <h4 className="text-xs sm:text-sm font-bold text-white truncate">
                     {language === "bn" ? "কৃষিসেতু এআই সহকারী" : "KrishiSetu AI Assistant"}
                   </h4>
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-700/80 text-emerald-200 shrink-0">
-                    Online
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-700/80 text-emerald-200 shrink-0">
+                    Nemotron 550B
                   </span>
                 </div>
                 <p className="text-[10px] text-agri-300 truncate">
-                  {language === "bn" ? "নিট লাভ ক্যালকুলেটর ও লাইভ বাজার তথ্য" : "Net Profit & Live Market Intelligence"}
+                  ⚡ NVIDIA Nemotron-3 • {language === "bn" ? "লাইভ বাজার বুদ্ধিমত্তা" : "Live Market AI"}
                 </p>
               </div>
             </div>

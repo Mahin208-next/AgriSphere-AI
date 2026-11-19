@@ -11,7 +11,7 @@ export class AssistantController {
       }
 
       const userId = (req as any).user?.id || dataStore.currentUserId;
-      const response = assistantService.answerFarmerQuery(query, userId);
+      const response = await assistantService.answerFarmerQuery(query, userId);
       res.json({ success: true, ...response });
     } catch (err) {
       next(err);
