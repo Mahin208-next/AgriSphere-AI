@@ -3,10 +3,7 @@
  * Supports Vercel Services bindings, single-host deployment, and separated frontend/backend hosting.
  */
 
-export const BACKEND_API_BASE =
-  process.env.BACKEND_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "";
+export const BACKEND_API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 /**
  * Resolves API URL dynamically:
