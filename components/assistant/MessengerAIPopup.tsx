@@ -222,7 +222,7 @@ export default function MessengerAIPopup() {
   };
 
   return (
-    <div className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-50 select-none">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[99999] select-none">
       {/* Expanded Messenger Modal */}
       {isOpen ? (
         <div className="bg-white rounded-3xl border border-earth-300 shadow-2xl w-[calc(100vw-24px)] sm:w-[410px] max-w-[420px] h-[560px] sm:h-[580px] max-h-[85vh] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">

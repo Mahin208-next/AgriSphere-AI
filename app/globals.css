@@ -42,3 +42,23 @@ h1, h2, h3, h4, h5, h6 {
   background: #a8a29e;
 }
 
+/* Hide Netlify injected HUD and Powered by Netlify badge to avoid obscuring chat widget */
+#nl-badge-frame,
+#nl-hud-frame,
+iframe[id^="nl-"],
+iframe[title*="Netlify"],
+[data-netlify-badge],
+.netlify-badge {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  clip-path: polygon(0 0, 0 0, 0 0, 0 0) !important;
+  z-index: -999999 !important;
+  position: absolute !important;
+  left: -99999px !important;
+  top: -99999px !important;
+}
+
