@@ -10,7 +10,6 @@ import {
   Lock,
   KeyRound,
   ArrowRight,
-  Sparkles,
   AlertCircle,
   LogOut,
   ChevronLeft,
@@ -292,21 +291,6 @@ export default function AdminPage() {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
-
-            {/* Quick Demo Button for Evaluators */}
-            <div className="pt-3 border-t border-slate-800 space-y-2">
-              <button
-                type="button"
-                onClick={() => handleAdminAuth(undefined, "admin2026")}
-                disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>
-                  {language === "bn" ? "১-ক্লিকে অ্যাডমিন অনুমোদন (হ্যাকাতন জাজ ডেমো)" : "1-Click Admin Access (Judge Demo)"}
-                </span>
-              </button>
-            </div>
           </div>
 
           {/* Back Link */}
