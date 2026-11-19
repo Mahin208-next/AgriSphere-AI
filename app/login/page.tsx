@@ -15,7 +15,6 @@ import {
   Phone,
   KeyRound,
   ArrowRight,
-  Sparkles,
   AlertCircle,
   Eye,
   EyeOff,
@@ -391,11 +390,11 @@ function LoginFormContent() {
             </p>
 
             {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-agri-800 hover:bg-agri-900 text-white font-bold text-sm shadow-sm transition disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-agri-800 hover:bg-agri-900 text-white font-bold text-sm shadow-sm transition disabled:opacity-50"
               >
                 <span>
                   {loading
@@ -403,17 +402,6 @@ function LoginFormContent() {
                     : (language === "bn" ? `${currentRoleConfig.titleBn} হিসেবে লগইন` : `Sign In as ${currentRoleConfig.titleEn}`)}
                 </span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleLogin()}
-                disabled={loading}
-                title={language === "bn" ? "তাত্ক্ষণিক ডেমো প্রবেশ" : "1-Click Demo Access"}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-harvest-500 hover:bg-harvest-600 text-harvest-950 font-bold text-xs shadow-xs transition"
-              >
-                <Sparkles className="w-4 h-4 text-harvest-900" />
-                <span>{language === "bn" ? "১-ক্লিকে প্রবেশ" : "1-Click Enter"}</span>
               </button>
             </div>
           </form>
